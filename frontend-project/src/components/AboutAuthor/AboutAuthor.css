@@ -1,0 +1,35 @@
+.about-author {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+  background-color: #ffffff;
+  color: #1a1b22;
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 80px 104px;
+  box-sizing: border-box;
+}
+
+.about-author__content {
+  display: flex;
+  flex-direction: column;
+}
+
+.about-author__title {
+  margin: 0 0 32px 0;
+}
+
+.about-author__description {
+  margin: 0;
+}
+
+.about-author__image {
+  width: 464px;
+  height: 464px;
+  min-width: 464px;
+  min-height: 464px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
