@@ -19,7 +19,6 @@ export const getNews = ({
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(today.getDate() - 7);
 
- 
   const toDate = to || today.toISOString().split("T")[0];
   const fromDate = from || sevenDaysAgo.toISOString().split("T")[0];
 
@@ -33,7 +32,13 @@ export const getNews = ({
     to: toDate,
   });
 
-  return fetch(`https://newsapi.org/v2/everything?${params.toString()}`)
+  const corsProxy = "https://api.allorigins.win/raw?url=";
+  const apiUrl = `https://newsapi.org/v2/everything?${params.toString()}`;
+  const finalUrl = window.location.hostname.includes("github.io")
+    ? corsProxy + encodeURIComponent(apiUrl)
+    : apiUrl;
+
+  return fetch(finalUrl)
     .then((res) => checkResponse(res))
     .catch((error) => {
       console.log("Error fetching news:", error);

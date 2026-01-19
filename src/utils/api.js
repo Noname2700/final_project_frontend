@@ -1,4 +1,4 @@
-const BASE_URL =  import.meta.env.VITE_API_URL || "https://localhost:3001";
+const BASE_URL = import.meta.env.VITE_API_URL || "https://localhost:3001";
 
 export function checkResponse(res) {
   return res.ok ? res.json() : Promise.reject(`Error: ${res.status}`);
