@@ -8,11 +8,25 @@ function SavedArticles({
   savedArticles = [],
   keywords = [],
   onDeleteArticle,
+  isLoggedIn,
+  setActiveModal,
 }) {
   const [showAllKeywords, setShowAllKeywords] = useState(false);
 
-  const displayedKeywords = showAllKeywords ? keywords : keywords.slice(0, 3);
-  const hasMoreKeywords = keywords.length > 3;
+  // Extract unique keywords from saved articles if not provided
+  const articleKeywords =
+    keywords.length > 0
+      ? keywords
+      : [
+          ...new Set(
+            savedArticles.map((article) => article.keyword).filter(Boolean),
+          ),
+        ];
+
+  const displayedKeywords = showAllKeywords
+    ? articleKeywords
+    : articleKeywords.slice(0, 3);
+  const hasMoreKeywords = articleKeywords.length > 3;
 
   return (
     <div className="saved-articles__page">
@@ -22,7 +36,7 @@ function SavedArticles({
       }, you have ${savedArticlesCount} saved article${
         savedArticlesCount !== 1 ? "s" : ""
       }`}</h2>
-      {keywords.length > 0 && (
+      {articleKeywords.length > 0 && (
         <p className="saved-articles__keywords">
           By keywords:{" "}
           {displayedKeywords.map((keyword, index) => (
@@ -38,19 +52,32 @@ function SavedArticles({
                 className="saved-articles__more-btn"
                 onClick={() => setShowAllKeywords(!showAllKeywords)}
               >
-                {showAllKeywords ? "show less" : `${keywords.length - 3} more`}
+                {showAllKeywords
+                  ? "show less"
+                  : `${articleKeywords.length - 3} more`}
               </button>
             </>
           )}
         </p>
       )}
       <section className=" saved-articles__section ">
-        <NewsCards
-          articles={savedArticles}
-          savedArticles={savedArticles}
-          onDeleteArticle={onDeleteArticle}
-          showDelete={true}
-        />
+        {savedArticles.length > 0 ? (
+          <NewsCards
+            articles={savedArticles}
+            savedArticles={savedArticles}
+            onDeleteArticle={onDeleteArticle}
+            showDelete={true}
+            isLoggedIn={isLoggedIn}
+            setActiveModal={setActiveModal}
+          />
+        ) : (
+          <div className="saved-articles__empty">
+            <p className="saved-articles__empty-text">
+              You haven't saved any articles yet. Start exploring and save
+              articles that interest you!
+            </p>
+          </div>
+        )}
       </section>
     </div>
   );

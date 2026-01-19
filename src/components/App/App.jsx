@@ -37,7 +37,15 @@ function App() {
     name: "",
   });
 
-  const [savedArticles, setSavedArticles] = useState([]);
+  const [savedArticles, setSavedArticles] = useState(() => {
+    const saved = localStorage.getItem("savedArticles");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  
+  useEffect(() => {
+    localStorage.setItem("savedArticles", JSON.stringify(savedArticles));
+  }, [savedArticles]);
 
   const handleSearch = (searchQuery) => {
     setIsLoadingArticles(true);
@@ -45,7 +53,7 @@ function App() {
     setSearchKeyword(searchQuery);
     setSearchExecuted(true);
 
-    // Date range is automatically calculated in getNews (7 days ago to today)
+    
     getNews({ query: searchQuery, sortBy: "publishedAt" })
       .then((data) => {
         setArticles(data.articles);
@@ -163,7 +171,7 @@ function App() {
     const isSaved = savedArticles.some((saved) => saved.url === articles.url);
     if (isSaved) {
       const updatedArticles = savedArticles.filter(
-        (saved) => saved.url !== articles.url
+        (saved) => saved.url !== articles.url,
       );
       setSavedArticles(updatedArticles);
       return;
@@ -174,7 +182,7 @@ function App() {
 
   const handleDeleteSavedArticle = (articleUrl) => {
     const updatedArticles = savedArticles.filter(
-      (item) => item.url !== articleUrl
+      (item) => item.url !== articleUrl,
     );
     setSavedArticles(updatedArticles);
   };
@@ -245,8 +253,10 @@ function App() {
                     userData={userData}
                     savedArticlesCount={savedArticles.length}
                     savedArticles={savedArticles}
-                    searchKeywords={[]}
+                    keywords={[]}
                     onDeleteArticle={handleDeleteSavedArticle}
+                    isLoggedIn={isLoggedIn}
+                    setActiveModal={setActiveModal}
                   />
                 </ProtectedRoute>
               }
