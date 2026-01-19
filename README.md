@@ -23,5 +23,5 @@ Next, we built the user authentication forms and added validation to ensure user
 ("https://Noname2700.github.io/final_project_frontend")
 
 ## Project Pitch Video
-check out [()]
-where I describe my project and some challenges I faced while building the frontend side of the project.
+check out [(https://drive.google.com/file/d/1-Z66Y04SQVhly_fxOXIWgce0z0Td-zBC/view?usp=sharing)]
+where I describe my project and some challenges I faced while building the frontend side of this News Article App.
