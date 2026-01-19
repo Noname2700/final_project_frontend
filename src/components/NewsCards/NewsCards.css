@@ -1,0 +1,35 @@
+.news-cards__list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0 auto;
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(auto-fit, 400px);
+  gap: 40px 20px;
+  align-items: center;
+  padding: 40px 20px;
+  position: relative;
+}
+
+.news-cards__show-more-button {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  background-color: white;
+  border-radius: 100px;
+  width: 288px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 64px;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  color: #1a1b22;
+  cursor: pointer;
+  margin: 0 auto 60px auto;
+}
+
+.news-cards__show-more-button:hover {
+  background-color: #e8e8e8;
+}

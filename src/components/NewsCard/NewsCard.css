@@ -1,0 +1,187 @@
+.news-card {
+  position: relative;
+  background-color: #ffffff;
+  height: 576px;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.news-card__keyword {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 24px;
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  background-color: #ffffff;
+  padding: 8px 22px;
+  color: #000000;
+  border-radius: 10px;
+  z-index: 2;
+}
+
+.news-card__date {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 24px;
+  padding: 0 24px;
+  margin: 0 0 12px 0;
+  font-family: "Roboto", sans-serif;
+  font-size: 18px;
+  line-height: 24px;
+  color: #b6bcbf;
+}
+
+.news-card__title {
+  font-family: "Roboto Slab", serif;
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 30px;
+  padding: 0 24px;
+  margin: 0 0 16px 0;
+  color: #1a1b22;
+  overflow: hidden;
+  max-height: 60px;
+}
+
+.news-card__description {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 22px;
+  padding: 0 24px;
+  margin: 0 0 auto 0;
+  color: #1a1b22;
+  overflow: hidden;
+  max-height: 110px;
+}
+
+.news-card__source {
+  padding: 0 24px 24px 24px;
+  margin: 18px 0 0 0;
+  font-family: "Roboto Slab", serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  color: #b6bcbf;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.news-card__image {
+  display: block;
+  margin-bottom: 20px;
+  height: 272px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 0;
+  flex-shrink: 0;
+}
+
+.news-card__save-button {
+  width: 40px;
+  height: 40px;
+  background-image: url(../../assets/icons/bookmark.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  border-radius: 8px;
+  z-index: 2;
+}
+
+.news-card__save-button:hover {
+  background-image: url(../../assets/icons/bookmarkhover.svg);
+  cursor: pointer;
+  opacity: 1;
+}
+.news-card__save-button:disabled:hover::after {
+  content: "Sign in to save articles";
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 100%;
+  position: absolute;
+  top: 50%;
+  right: 50px;
+  transform: translateY(-50%);
+  background-color: white;
+  color: #000000;
+  padding: 5px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.news-card__save-button_clicked {
+  width: 40px;
+  height: 40px;
+  background-image: url(../../assets/icons/bluebookmark.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  border-radius: 8px;
+  z-index: 2;
+}
+
+.news-card__save-button_clicked:hover {
+  opacity: 0.8;
+}
+
+.news-card__delete-button {
+  background-image: url(../../assets/icons/trash.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background-color: white;
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  border-radius: 8px;
+  z-index: 2;
+}
+
+.news-card__delete-button:hover {
+  background-image: url(../../assets/icons/darktrash.svg);
+  cursor: pointer;
+}
+
+.news-card__delete-button:hover::after {
+  content: "Remove from saved";
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 100%;
+  position: absolute;
+  top: 50%;
+  right: 50px;
+  transform: translateY(-50%);
+  background-color: white;
+  color: #000000;
+  padding: 5px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
