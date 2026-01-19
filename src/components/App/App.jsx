@@ -37,15 +37,29 @@ function App() {
     name: "",
   });
 
-  const [savedArticles, setSavedArticles] = useState(() => {
-    const saved = localStorage.getItem("savedArticles");
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [savedArticles, setSavedArticles] = useState([]);
 
   
   useEffect(() => {
-    localStorage.setItem("savedArticles", JSON.stringify(savedArticles));
-  }, [savedArticles]);
+    if (isLoggedIn && userData._id) {
+      const userKey = `savedArticles_${userData._id}`;
+      const saved = localStorage.getItem(userKey);
+      if (saved) {
+        setSavedArticles(JSON.parse(saved));
+      }
+    } else {
+      
+      setSavedArticles([]);
+    }
+  }, [isLoggedIn, userData._id]);
+
+  
+  useEffect(() => {
+    if (isLoggedIn && userData._id) {
+      const userKey = `savedArticles_${userData._id}`;
+      localStorage.setItem(userKey, JSON.stringify(savedArticles));
+    }
+  }, [savedArticles, isLoggedIn, userData._id]);
 
   const handleSearch = (searchQuery) => {
     setIsLoadingArticles(true);
@@ -53,7 +67,6 @@ function App() {
     setSearchKeyword(searchQuery);
     setSearchExecuted(true);
 
-    
     getNews({ query: searchQuery, sortBy: "publishedAt" })
       .then((data) => {
         setArticles(data.articles);
@@ -162,12 +175,18 @@ function App() {
   };
 */
   const handleSignOut = () => {
+    setSavedArticles([]); 
     setIsLoggedIn(false);
     setUserData({ _id: "", email: "", name: "" });
     navigate("/");
   };
 
   const handleSavedArticles = (articles) => {
+    if (!isLoggedIn) {
+      setActiveModal("login");
+      return;
+    }
+
     const isSaved = savedArticles.some((saved) => saved.url === articles.url);
     if (isSaved) {
       const updatedArticles = savedArticles.filter(

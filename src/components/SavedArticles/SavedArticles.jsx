@@ -13,7 +13,6 @@ function SavedArticles({
 }) {
   const [showAllKeywords, setShowAllKeywords] = useState(false);
 
-  // Extract unique keywords from saved articles if not provided
   const articleKeywords =
     keywords.length > 0
       ? keywords

@@ -1,20 +1,23 @@
 # News Article App
-This project is a fully responsive news article website that allows users to search for any information they want—covering current global topics as well as older articles from any country. Each article displays its publication date and source, helping users understand how recent the news is and where it came from. Users can also create an account to save articles they find interesting.
+- This project is a fully responsive news article website that allows users to search for any information they want—covering current global topics as well as older articles from any country. Each article displays its publication date and source, helping users understand how recent the news is and where it came from. Users can also create an account to save articles they find interesting.
 
 ## Functionality
 
-When users perform a search, the results appear as a collection of article cards. Hovering over the save button prompts users to create an account. The button on the right side of the header opens modal forms for signing up and signing in. Once signed in, the header updates to show the user’s name, which also provides the option to sign out. These features work consistently across all devices, from desktop to mobile. A dedicated “Saved Articles” page becomes available only after the user signs in, allowing them to view and delete their saved articles.
-To build this functionality, we structured our components with the necessary data to display articles as cards. We began by creating the page layout and breaking it into sections based on the Figma design. After styling the layout, we obtained a News API key to enable article searches. We created and tested the fetch requests using Postman to ensure the API worked correctly.
+- When users perform a search, the results appear as a collection of article cards. Hovering over the save button prompts users to create an account. The button on the right side of the header opens modal forms for signing up and signing in. Once signed in, the header updates to show the user’s name, which also provides the option to sign out. These features work consistently across all devices, from desktop to mobile. A dedicated “Saved Articles” page becomes available only after the user signs in, allowing them to view and delete their saved articles.
+
+- To build this functionality, we structured our components with the necessary data to display articles as cards. We began by creating the page layout and breaking it into sections based on the Figma design. After styling the layout, we obtained a News API key to enable article searches. We created and tested the fetch requests using Postman to ensure the API worked correctly.
 Next, we built the user authentication forms and added validation to ensure users entered proper credentials before gaining access to saving articles. Conditional rendering was used throughout the app to control access—showing or hiding the save/delete buttons, the “Saved Articles” link in the header, and other UI elements depending on whether the user was signed in.
-We then set up routing to make all navigation links function correctly, including two footer links that lead to external sources. After testing the routes, we focused on responsiveness. We implemented a custom on‑screen keyboard that appears when users interact with text inputs on mobile devices. To support this, we added a utility file that detects whether the device is touch‑enabled, allowing the keyboard to adapt across different platforms.
-Finally, we matched the app’s layout to the Figma design, added the required fonts, and applied consistent styling across all components to complete the project.
+ 
+- We then set up routing to make all navigation links function correctly, including two footer links that lead to external sources. After testing the routes, we focused on responsiveness. We implemented a custom on‑screen keyboard that appears when users interact with text inputs on mobile devices. To support this, we added a utility file that detects whether the device is touch‑enabled, allowing the keyboard to adapt across different platforms.
+- Finally, we matched the app’s layout to the Figma design, added the required fonts, and applied consistent styling across all components to complete the project.
 
 ## Technology
-JavaScript
-React
-External API
-Fetch API
-Media Queries
+- JavaScript
+- React
+- External API
+- Fetch API
+- Media Queries
+- Router
 
 ## Deployment
 ("https://Noname2700.github.io/final_project_frontend")
