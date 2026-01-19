@@ -246,7 +246,7 @@ function App() {
               }
             />
             <Route
-              path="/saved-news"
+              path="/saved-articles"
               element={
                 <ProtectedRoute isLoggedIn={isLoggedIn}>
                   <SavedArticles
