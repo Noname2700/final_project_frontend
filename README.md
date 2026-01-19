@@ -25,3 +25,4 @@ Next, we built the user authentication forms and added validation to ensure user
 ## Project Pitch Video
 check out [(https://drive.google.com/file/d/1-Z66Y04SQVhly_fxOXIWgce0z0Td-zBC/view?usp=sharing)]
 where I describe my project and some challenges I faced while building the frontend side of this News Article App.
+

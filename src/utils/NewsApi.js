@@ -32,13 +32,12 @@ export const getNews = ({
     to: toDate,
   });
 
-  const corsProxy = "https://api.allorigins.win/raw?url=";
-  const apiUrl = `https://newsapi.org/v2/everything?${params.toString()}`;
-  const finalUrl = window.location.hostname.includes("github.io")
-    ? corsProxy + encodeURIComponent(apiUrl)
-    : apiUrl;
+  
+  const newsApiBaseUrl = import.meta.env.PROD
+    ? "https://nomoreparties.co/news/v2/everything"
+    : "https://newsapi.org/v2/everything";
 
-  return fetch(finalUrl)
+  return fetch(`${newsApiBaseUrl}?${params.toString()}`)
     .then((res) => checkResponse(res))
     .catch((error) => {
       console.log("Error fetching news:", error);
