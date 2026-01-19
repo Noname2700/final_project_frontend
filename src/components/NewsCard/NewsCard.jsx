@@ -1,4 +1,5 @@
 import "./NewsCard.css";
+import { useState } from "react";
 
 function NewsCard({
   article,
@@ -11,6 +12,7 @@ function NewsCard({
   showDelete = false,
 }) {
   const isSaved = savedArticles.some((item) => item.url === article.url);
+  const [imageError, setImageError] = useState(false);
 
   const handleDeleteArticle = () => {
     if (onDeleteArticle) {
@@ -32,11 +34,20 @@ function NewsCard({
         <span className="news-card__keyword">{article.keyword}</span>
       )}
 
-      <img
-        src={article.urlToImage}
-        alt={article.title}
-        className="news-card__image"
-      />
+      {article.urlToImage && !imageError ? (
+        <img
+          src={article.urlToImage}
+          alt={article.title}
+          className="news-card__image"
+          onError={() => setImageError(true)}
+        />
+      ) : (
+        <div className="news-card__image news-card__image-placeholder">
+          <span className="news-card__image-placeholder-text">
+            No Image Available
+          </span>
+        </div>
+      )}
 
       {showDelete && (
         <button

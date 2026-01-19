@@ -83,6 +83,21 @@
   flex-shrink: 0;
 }
 
+.news-card__image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+  position: relative;
+}
+
+.news-card__image-placeholder-text {
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  color: #b6bcbf;
+  text-align: center;
+}
+
 .news-card__save-button {
   width: 40px;
   height: 40px;
