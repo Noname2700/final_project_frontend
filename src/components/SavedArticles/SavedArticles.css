@@ -6,6 +6,7 @@
   min-height: 500px;
   padding: 40px 20px;
   animation: fadeIn 0.5s ease-out;
+  box-sizing: border-box;
 }
 
 @keyframes fadeIn {
@@ -82,5 +83,6 @@
 @media screen and (max-width: 430px) {
   .saved-articles__page {
     padding: 32px 16px;
+    box-sizing: border-box;
   }
 }

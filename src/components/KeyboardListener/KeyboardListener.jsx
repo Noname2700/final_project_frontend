@@ -51,7 +51,7 @@ export default function KeyboardListener() {
       }
     };
 
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = () => {
       // Close keyboard when any form is submitted
       if (targetElement) {
         targetElement.blur();

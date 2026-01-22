@@ -13,7 +13,7 @@ function Header({
   return (
     <header className="header">
       <h2 className="header__title">NewsExplorer</h2>
-      <div className="header__buttons">
+      <nav className="header__buttons">
         <NavLink to="/" end className="header__homebutton">
           Home
         </NavLink>
@@ -24,14 +24,16 @@ function Header({
           </NavLink>
         )}
         {isLoggedIn ? (
-             <button className="header__usernamebutton" onClick={onSignOut}>{userData.name} <img src={Logout} alt="Logout" className="header__logout-icon" /></button>
-) : (
-          
+          <button className="header__usernamebutton" onClick={onSignOut}>
+            {userData.name}{" "}
+            <img src={Logout} alt="Logout" className="header__logout-icon" />
+          </button>
+        ) : (
           <button className="header__signupbutton" onClick={onSignUpClick}>
             Sign Up
           </button>
         )}
-      </div>
+      </nav>
 
       <button className="header__menu-btn" onClick={onMenuClick} type="button">
         <span className="header__menu-line"></span>

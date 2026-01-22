@@ -92,8 +92,30 @@
   padding-left: 24px;
 }
 
-@media screen and (max-width: 380px) {
+@media screen and (max-width: 320px) {
   .search-form {
-    margin-top: 60px;
+    margin-top: 32px;
+    align-items: flex-start;
+  }
+
+  .search-form__input {
+    max-width: 288px;
+    min-width: 288px;
+    height: 56px;
+    padding: 0 20px;
+    font-size: 14px;
+  }
+
+  .search-form__button {
+    max-width: 288px;
+    min-width: 288px;
+    height: 56px;
+    font-size: 16px;
+    padding: 0 24px;
+  }
+
+  .search-form__error {
+    padding-left: 0;
+    font-size: 12px;
   }
 }

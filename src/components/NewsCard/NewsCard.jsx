@@ -3,7 +3,6 @@ import { useState } from "react";
 
 function NewsCard({
   article,
-  keyword,
   savedArticles,
   isLoggedIn,
   setActiveModal,
@@ -34,20 +33,27 @@ function NewsCard({
         <span className="news-card__keyword">{article.keyword}</span>
       )}
 
-      {article.urlToImage && !imageError ? (
-        <img
-          src={article.urlToImage}
-          alt={article.title}
-          className="news-card__image"
-          onError={() => setImageError(true)}
-        />
-      ) : (
-        <div className="news-card__image news-card__image-placeholder">
-          <span className="news-card__image-placeholder-text">
-            No Image Available
-          </span>
-        </div>
-      )}
+      <a
+        href={article.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="news-card__link"
+      >
+        {article.urlToImage && !imageError ? (
+          <img
+            src={article.urlToImage}
+            alt={article.title}
+            className="news-card__image"
+            onError={() => setImageError(true)}
+          />
+        ) : (
+          <div className="news-card__image news-card__image-placeholder">
+            <span className="news-card__image-placeholder-text">
+              No Image Available
+            </span>
+          </div>
+        )}
+      </a>
 
       {showDelete && (
         <button
@@ -78,7 +84,14 @@ function NewsCard({
         })}
       </p>
 
-      <h3 className="news-card__title">{article.title}</h3>
+      <a
+        href={article.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="news-card__title-link"
+      >
+        <h3 className="news-card__title">{article.title}</h3>
+      </a>
 
       <p className="news-card__description">{article.description}</p>
 

@@ -49,12 +49,15 @@ function Keyboard() {
       targetElement.blur();
       closeKeyboard();
     } else if (key === " ") {
-      targetElement.value += " ";
+      const newValue = targetElement.value + " ";
+      // eslint-disable-next-line react-hooks/immutability
+      targetElement.value = newValue;
       targetElement.dispatchEvent(new Event("input", { bubbles: true }));
     } else {
       // Regular character
       const char = isShift ? key.toUpperCase() : key;
-      targetElement.value += char;
+      const newValue = targetElement.value + char;
+      targetElement.value = newValue;
       targetElement.dispatchEvent(new Event("input", { bubbles: true }));
       if (isShift) setIsShift(false); // Auto-disable shift after one character
     }
@@ -62,7 +65,9 @@ function Keyboard() {
 
   const handleDeleteKey = () => {
     if (targetElement.value.length === 0) return;
-    targetElement.value = targetElement.value.slice(0, -1);
+    const newValue = targetElement.value.slice(0, -1);
+    // eslint-disable-next-line react-hooks/immutability
+    targetElement.value = newValue;
     targetElement.dispatchEvent(new Event("input", { bubbles: true }));
   };
 

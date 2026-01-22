@@ -10,7 +10,9 @@
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
 }
 
 .mobile-menu--open {
@@ -23,12 +25,13 @@
   background-color: #1a1b22;
   padding: 60px 20px 20px;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
-  
+  border-radius: 16px;
+  box-sizing: border-box;
 }
 .mobile-menu__header {
   background-color: transparent;
   margin-bottom: 30px;
-  
+
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -96,13 +99,12 @@
   margin: 20px auto 0 auto;
   display: block;
   transition: opacity 0.3s ease;
-  
 }
 
 .mobile-menu__signin-btn:hover,
 .mobile-menu__username-btn:hover {
   opacity: 0.7;
-   box-shadow: #d6d6dc 0px 4px 10px;
+  box-shadow: #d6d6dc 0px 4px 10px;
 }
 
 .mobile-menu__text {

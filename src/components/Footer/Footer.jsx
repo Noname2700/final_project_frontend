@@ -10,7 +10,7 @@ function Footer() {
 
   return (
     <footer className="footer">
-      <div className="footer__links">
+      <nav className="footer__links">
         <Link to="/" className="footer__link-home" onClick={handleHomeClick}>
           Home
         </Link>
@@ -40,7 +40,7 @@ function Footer() {
         >
           <img src={linkedinIcon} alt="LinkedIn" className="footer__icon" />
         </a>
-      </div>
+      </nav>
       <div className="footer__info">
         <p className="footer__copyright">{`© ${new Date().getFullYear()}`}</p>
         <p className="footer__text">Supersite, Powered by News API</p>

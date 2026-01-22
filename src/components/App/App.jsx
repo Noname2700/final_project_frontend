@@ -1,5 +1,6 @@
+
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Header from "../Header/Header.jsx";
 import Main from "../Main/Main.jsx";
 import SavedArticles from "../SavedArticles/SavedArticles.jsx";
@@ -37,23 +38,38 @@ function App() {
     name: "",
   });
 
-  const [savedArticles, setSavedArticles] = useState([]);
+  const [savedArticles, setSavedArticles] = useState(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      const userKey = `savedArticles_${user._id}`;
+      const saved = localStorage.getItem(userKey);
+      return saved ? JSON.parse(saved) : [];
+    }
+    return [];
+  });
 
-  
+  useEffect(() => {
+    if (!isLoggedIn) {
+      setSavedArticles([]);
+    }
+  }, [isLoggedIn]);
+
   useEffect(() => {
     if (isLoggedIn && userData._id) {
       const userKey = `savedArticles_${userData._id}`;
       const saved = localStorage.getItem(userKey);
       if (saved) {
-        setSavedArticles(JSON.parse(saved));
-      }
-    } else {
-      
-      setSavedArticles([]);
-    }
-  }, [isLoggedIn, userData._id]);
+        const articles = JSON.parse(saved);
 
-  
+        setSavedArticles((current) => {
+          const currentJson = JSON.stringify(current);
+          return currentJson === saved ? current : articles;
+        });
+      }
+    }
+  }, [userData._id, isLoggedIn]);
+
   useEffect(() => {
     if (isLoggedIn && userData._id) {
       const userKey = `savedArticles_${userData._id}`;
@@ -175,7 +191,7 @@ function App() {
   };
 */
   const handleSignOut = () => {
-    setSavedArticles([]); 
+    setSavedArticles([]);
     setIsLoggedIn(false);
     setUserData({ _id: "", email: "", name: "" });
     navigate("/");
@@ -206,15 +222,18 @@ function App() {
     setSavedArticles(updatedArticles);
   };
 
-  const closeActiveModal = () => {
+  const closeActiveModal = useCallback(() => {
     setActiveModal("");
-  };
+  }, []);
 
-  const handleEscape = (e) => {
-    if (e.key === "Escape") {
-      closeActiveModal();
-    }
-  };
+  const handleEscape = useCallback(
+    (e) => {
+      if (e.key === "Escape") {
+        closeActiveModal();
+      }
+    },
+    [closeActiveModal],
+  );
 
   useEffect(() => {
     if (!activeModal) return;
@@ -223,7 +242,7 @@ function App() {
     return () => {
       document.removeEventListener("keydown", handleEscape);
     };
-  }, [activeModal]);
+  }, [activeModal, handleEscape]);
 
   return (
     <KeyboardProvider>
@@ -232,7 +251,7 @@ function App() {
 
       <div className="page">
         <div
-          className={`page__content${isHomePage ? " page__content--home" : ""}`}
+          className={`page__content${isHomePage ? " page__content_type_home" : ""}`}
         >
           <Header
             onSignUpClick={() => setActiveModal("register")}
@@ -282,20 +301,22 @@ function App() {
             />
           </Routes>
         </div>
-        {isHomePage && (
-          <ArticlesSection
-            articles={articles}
-            isLoadingArticles={isLoadingArticles}
-            searchError={searchError}
-            searchKeyword={searchKeyword}
-            onSaveArticle={handleSavedArticles}
-            savedArticles={savedArticles}
-            searchExecuted={searchExecuted}
-            isLoggedIn={isLoggedIn}
-            setActiveModal={setActiveModal}
-          />
-        )}
-        {isHomePage && <AboutAuthor />}
+        <main>
+          {isHomePage && (
+            <ArticlesSection
+              articles={articles}
+              isLoadingArticles={isLoadingArticles}
+              searchError={searchError}
+              searchKeyword={searchKeyword}
+              onSaveArticle={handleSavedArticles}
+              savedArticles={savedArticles}
+              searchExecuted={searchExecuted}
+              isLoggedIn={isLoggedIn}
+              setActiveModal={setActiveModal}
+            />
+          )}
+          {isHomePage && <AboutAuthor />}
+        </main>
         <Footer />
 
         {activeModal === "register" && (
