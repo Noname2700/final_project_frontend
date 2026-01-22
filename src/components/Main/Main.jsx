@@ -1,4 +1,5 @@
 import "./Main.css";
+import SearchForm from "../SearchForm/SearchForm.jsx";
 
 function Main({ onSearch }) {
   return (
