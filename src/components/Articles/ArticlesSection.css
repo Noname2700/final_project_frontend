@@ -4,6 +4,7 @@
   height: auto;
   background-color: #f0f0f0;
   position: relative;
+  padding-bottom: 20px;
 }
 
 .articles-section__title {
@@ -27,7 +28,7 @@
   text-align: center;
 
   padding: 40px 20px;
-  color: #1A1B22;
+  color: #1a1b22;
 }
 
 .article-section__no-results-title {
@@ -45,7 +46,7 @@
   line-height: 30px;
   margin: 16px 0 0 0;
   display: flex;
-  color: #6C707A;
+  color: #6c707a;
 }
 
 .article-section__notfoundimage {
