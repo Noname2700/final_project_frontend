@@ -1,0 +1,243 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #0000004d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
+  z-index: 1000;
+}
+
+.modal_opened {
+  visibility: visible;
+}
+
+.modal__title {
+  font-family: "Roboto", sans-serif;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 100%;
+  letter-spacing: 0;
+  margin: 0;
+  margin-bottom: 24px;
+  color: #1a1b22;
+  height: 32px;
+}
+
+.modal__label {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: 0;
+  margin-bottom: 8px;
+  color: #2f71e5;
+}
+
+.modal__legend {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 0;
+  margin-bottom: 12px;
+  color: #a13737;
+}
+
+.modal__content {
+  width: 430px;
+  position: relative;
+  background-color: rgb(247, 244, 244);
+  padding: 28px 32px 28px 32px;
+  border-radius: 16px;
+}
+
+.modal__form {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal__button-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 32px;
+  gap: 16px;
+}
+
+.modal__content_type_image {
+  padding: 0;
+}
+
+.modal__input {
+  display: block;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #0d0c0c;
+  margin-bottom: 24px;
+  margin-top: 8px;
+  text-decoration: none;
+  color: #1a1b22;
+  background-color: transparent;
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+}
+
+.modal__input::placeholder {
+  color: #b6bcbf;
+}
+
+.modal__input_type_error {
+  border: 1px solid red;
+}
+
+.modal__error {
+  display: block;
+  color: #ff0000;
+  font-size: 12px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  line-height: 16px;
+  min-height: 16px;
+  margin-top: -20px;
+  margin-bottom: 8px;
+}
+
+.modal__error_visible {
+  color: red;
+  font-size: 12px;
+}
+
+.modal__radio-button {
+  border: none;
+  padding: 0;
+  width: 173px;
+}
+
+.modal__submit-btn {
+  width: 358px;
+  height: 64px;
+  border-radius: 100px;
+  cursor: pointer;
+  margin-top: 0;
+  color: #ffffff;
+  background-color: #2f71e5;
+  border: none;
+  font-family: "Roboto", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  box-shadow: #2a2a2c 0px 2px 5px;
+}
+
+.modal__submit-btn:hover {
+  background-color: #1a5ecf;
+  box-shadow: #2a2a2c 0px 2px 10px;
+}
+
+.modal__submit-btn_disabled,
+.modal__submit-btn_disabled:disabled {
+  background-color: #e6e8eb;
+  color: #b6bcbf;
+  cursor: not-allowed;
+  box-shadow: #2a2a2c 0px 2px 10px;
+}
+
+.modal__label_type_radio {
+  display: flex;
+  gap: 5px;
+  color: #00000080;
+  width: 44px;
+  height: 20px;
+  cursor: pointer;
+}
+.modal__label_type_radio:hover {
+  color: #000000;
+}
+.modal__label_type_radio:active {
+  color: #000000;
+}
+
+.modal .modal__close {
+  display: inline-block;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  background-image: url("../../assets/images/closebtn.svg");
+  transform: translate(62px, -60px);
+}
+
+.modal__link-btn {
+  width: 124px;
+  height: 36px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  margin-top: 0;
+  color: #0e28e5;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+}
+
+.modal__link-btndisabled {
+  background-color: transparent;
+  cursor: not-allowed;
+}
+
+.modal__link-btn:hover {
+  opacity: 0.7;
+}
+
+@media screen and (max-width: 430px) {
+  .modal {
+    align-items: flex-end;
+  }
+
+  .modal__content {
+    width: 100%;
+    max-width: 100%;
+
+    border-radius: 16px 16px 0 0;
+    min-height: 600px;
+    max-height: 600px;
+    overflow-y: auto;
+    margin-top: 80px;
+  }
+
+  .modal .modal__close {
+    transform: translate(0, 0);
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    z-index: 10;
+  }
+
+  .modal__submit-btn {
+    width: 100%;
+  }
+
+  .modal__title {
+    margin-top: 0;
+    margin-bottom: 24px;
+  }
+
+  .modal__form {
+    padding-bottom: 20px;
+  }
+}

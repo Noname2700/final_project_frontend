@@ -1,0 +1,35 @@
+.register-success {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.register-success__message {
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #000;
+  text-align: center;
+}
+
+.register-success__signin-btn {
+  background-color: transparent;
+  border: none;
+  color: #2f71e5;
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 8px 0;
+  margin-top: 8px;
+  transition: opacity 0.3s ease;
+  display: flex;
+}
+
+.register-success__signin-btn:hover {
+  opacity: 0.7;
+}
