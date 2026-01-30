@@ -36,7 +36,10 @@ This backend provides:
 
 
 ## Deployment
-("https://noname2700.github.io/final_project_frontend/")
+ This project is deployed on GitHub Pages:
+
+- You can open the GitHub website page for this project by clicking on the following link:("https://noname2700.github.io/final_project_frontend/")
+
 
 ## Project Pitch Video
 check out [(https://drive.google.com/file/d/1-Z66Y04SQVhly_fxOXIWgce0z0Td-zBC/view?usp=sharing)]
