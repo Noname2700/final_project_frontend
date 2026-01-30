@@ -9,6 +9,7 @@ const RegisterModal = ({
   onClose,
   handleRegistration,
   switchToLogin,
+  errorMessage,
 }) => {
   const { values, handleChange, resetForm, isValid } = useForm({
     username: "",
@@ -61,9 +62,35 @@ const RegisterModal = ({
           inputMode="none"
         />
         <span className="modal__error">
-          {values.email && isValid === false
-            ? "Please enter a valid email"
-            : ""}
+          {errorMessage
+            ? errorMessage
+            : values.email && isValid === false
+              ? "Please enter a valid email"
+              : ""}
+        </span>
+      </label>
+
+      <label className="modal__label">
+        Password
+        <input
+          type="password"
+          name="password"
+          value={values.password || ""}
+          onChange={handleChange}
+          placeholder="Enter Password"
+          required
+          className="modal__input"
+          minLength="6"
+          autoComplete="password"
+          onFocus={(e) => isTouchDevice() && openKeyboard(e.target)}
+          inputMode="none"
+        />
+        <span className="modal__error">
+          {errorMessage
+            ? errorMessage
+            : values.password && isValid === false
+              ? "Password must be at least 6 characters"
+              : ""}
         </span>
       </label>
 
@@ -84,31 +111,11 @@ const RegisterModal = ({
           inputMode="none"
         />
         <span className="modal__error">
-          {values.username && isValid === false
-            ? "Username must be 2-40 characters"
-            : ""}
-        </span>
-      </label>
-
-      <label className="modal__label">
-        Password
-        <input
-          type="password"
-          name="password"
-          value={values.password || ""}
-          onChange={handleChange}
-          placeholder="Enter Password"
-          required
-          className="modal__input"
-          minLength="6"
-          autoComplete="password"
-          onFocus={(e) => isTouchDevice() && openKeyboard(e.target)}
-          inputMode="none"
-        />
-        <span className="modal__error">
-          {values.password && isValid === false
-            ? "Password must be at least 6 characters"
-            : ""}
+          {errorMessage
+            ? errorMessage
+            : values.username && isValid === false
+              ? "Username must be 2-40 characters"
+              : ""}
         </span>
       </label>
 

@@ -5,7 +5,13 @@ import { useForm } from "../../hooks/useForm";
 import { useKeyboard } from "../../contexts/KeyboardContext";
 import { isTouchDevice } from "../../utils/isTouchDevice";
 
-const LoginModal = ({ isOpen, onClose, handleLogin, switchToRegister }) => {
+const LoginModal = ({
+  isOpen,
+  onClose,
+  handleLogin,
+  switchToRegister,
+  errorMessage,
+}) => {
   const { values, handleChange, resetForm, isValid } = useForm({
     email: "",
     password: "",
@@ -48,9 +54,11 @@ const LoginModal = ({ isOpen, onClose, handleLogin, switchToRegister }) => {
           inputMode="none"
         />
         <span className="modal__error">
-          {values.email && isValid === false
-            ? "Please enter a valid email"
-            : ""}
+          {errorMessage
+            ? errorMessage
+            : values.email && isValid === false
+              ? "Please enter a valid email"
+              : ""}
         </span>
       </label>
 
@@ -68,7 +76,11 @@ const LoginModal = ({ isOpen, onClose, handleLogin, switchToRegister }) => {
           inputMode="none"
         />
         <span className="modal__error">
-          {values.password && isValid === false ? "Password is required" : ""}
+          {errorMessage
+            ? errorMessage
+            : values.password && isValid === false
+              ? "Password is required"
+              : ""}
         </span>
       </label>
 

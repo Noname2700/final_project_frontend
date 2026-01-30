@@ -17,20 +17,23 @@ function NewsCardList({
   return (
     <div>
       <ul className="news-cards__list">
-        {articles.slice(0, visibleCards).map((article) => (
-          <li key={article.url}>
-            <NewsCard
-              article={article}
-              keyword={searchKeyword}
-              onSaveArticle={onSaveArticle}
-              savedArticles={savedArticles}
-              onDeleteArticle={onDeleteArticle}
-              showDelete={showDelete}
-              isLoggedIn={isLoggedIn}
-              setActiveModal={setActiveModal}
-            />
-          </li>
-        ))}
+        {articles.slice(0, visibleCards).map((article, idx) => {
+          const key = article._id || article.url || article.link || idx;
+          return (
+            <li key={key}>
+              <NewsCard
+                article={article}
+                keyword={searchKeyword}
+                onSaveArticle={onSaveArticle}
+                savedArticles={savedArticles}
+                onDeleteArticle={onDeleteArticle}
+                showDelete={showDelete}
+                isLoggedIn={isLoggedIn}
+                setActiveModal={setActiveModal}
+              />
+            </li>
+          );
+        })}
       </ul>
       {visibleCards < articles.length && (
         <button

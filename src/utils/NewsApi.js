@@ -1,3 +1,4 @@
+import axios from "axios";
 import { checkResponse } from "./api";
 
 const NEWS_API_KEY = import.meta.env.VITE_NEWS_API_KEY;
@@ -37,7 +38,8 @@ export const getNews = ({
     ? "https://nomoreparties.co/news/v2/everything"
     : "https://newsapi.org/v2/everything";
 
-  return fetch(`${newsApiBaseUrl}?${params.toString()}`)
+  return axios
+    .get(`${newsApiBaseUrl}?${params.toString()}`)
     .then((res) => checkResponse(res))
     .catch((error) => {
       console.log("Error fetching news:", error);

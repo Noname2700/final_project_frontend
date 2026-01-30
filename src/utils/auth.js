@@ -1,41 +1,33 @@
+import axios from "axios";
 import { checkResponse } from "./api.js";
 
-const BASE_URL = import.meta.env.VITE_API_URL || "https://localhost:3001";
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3002";
 
-function request(url, options) {
-  return fetch(url, options).then(checkResponse);
-}
-
-export const signup = ({ username, email, password }) => {
-  return request(`${BASE_URL}/signup`, {
-    method: "POST",
+function request(url, method, data, token) {
+  return axios({
+    url,
+    method,
+    data,
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
-    body: JSON.stringify({ name: username, email, password }),
+  }).then(checkResponse);
+}
+
+export const signup = ({ email, password, username }) => {
+  return request(`${BASE_URL}/api/users/signup`, "POST", {
+    email,
+    password,
+    name: username,
   });
 };
 
 export const signin = ({ email, password }) => {
-  return request(`${BASE_URL}/signin`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email, password }),
-  });
+  return request(`${BASE_URL}/api/users/signin`, "POST", { email, password });
 };
 
 export const checkToken = (token) => {
-  return request(`${BASE_URL}/users/me`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  return request(`${BASE_URL}/api/users/me`, "GET", undefined, token);
 };
-

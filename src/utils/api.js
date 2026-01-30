@@ -1,41 +1,48 @@
-const BASE_URL = import.meta.env.VITE_API_URL || "https://localhost:3001";
+import axios from "axios";
 
-export function checkResponse(res) {
-  return res.ok ? res.json() : Promise.reject(`Error: ${res.status}`);
+const BASE_URL = import.meta.env.VITE_API_URL;
+
+export function checkResponse(response) {
+  return response.data;
 }
 
 function getSavedArticles() {
   const token = localStorage.getItem("jwt");
-  return fetch(`${BASE_URL}/articles`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: token ? `Bearer ${token}` : "",
-    },
-  }).then(checkResponse);
+  return axios
+    .get(`${BASE_URL}/api/articles`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    })
+    .then(checkResponse);
 }
 
 function saveArticle(article) {
-  if (!article || !article.title || !article.url) {
+  if (!article || !article.title || !article.link) {
     return Promise.reject("Invalid article data");
   }
   const token = localStorage.getItem("jwt");
-  return fetch(`${BASE_URL}/articles`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: token ? `Bearer ${token}` : "",
-    },
-    body: JSON.stringify({
-      keyword: article.keyword,
-      title: article.title,
-      description: article.description,
-      publishedAt: article.publishedAt,
-      source: article.source,
-      url: article.url,
-      urlToImage: article.urlToImage,
-    }),
-  }).then(checkResponse);
+  return axios
+    .post(
+      `${BASE_URL}/api/articles`,
+      {
+        keyword: article.keyword,
+        imageUrl: article.imageUrl,
+        title: article.title,
+        date: article.date,
+        text: article.text,
+        source: article.source,
+        link: article.link,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token ? `Bearer ${token}` : "",
+        },
+      },
+    )
+    .then(checkResponse);
 }
 
 function deleteArticle(articleId) {
@@ -43,13 +50,13 @@ function deleteArticle(articleId) {
     return Promise.reject("Invalid article ID for deletion");
   }
   const token = localStorage.getItem("jwt");
-  return fetch(`${BASE_URL}/articles/${articleId}`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: token ? `Bearer ${token}` : "",
-    },
-  })
+  return axios
+    .delete(`${BASE_URL}/api/articles/${articleId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    })
     .then(checkResponse)
     .then(() => articleId);
 }

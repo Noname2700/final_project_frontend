@@ -25,7 +25,8 @@ function Header({
         )}
         {isLoggedIn ? (
           <button className="header__usernamebutton" onClick={onSignOut}>
-            {userData.name}{" "}
+            
+            {userData.name || userData.username || userData.email }
             <img src={Logout} alt="Logout" className="header__logout-icon" />
           </button>
         ) : (

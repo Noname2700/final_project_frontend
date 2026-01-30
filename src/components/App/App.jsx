@@ -1,4 +1,3 @@
-
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useCallback } from "react";
 import Header from "../Header/Header.jsx";
@@ -18,6 +17,8 @@ import "./App.css";
 import MobileMenu from "../MobileMenu/MobileMenu.jsx";
 import { getNews } from "../../utils/NewsApi.js";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute.jsx";
+import api from "../../utils/api.js";
+import { signup, signin, checkToken } from "../../utils/auth.js";
 
 function App() {
   const location = useLocation();
@@ -37,45 +38,65 @@ function App() {
     email: "",
     name: "",
   });
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const [savedArticles, setSavedArticles] = useState(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      const userKey = `savedArticles_${user._id}`;
-      const saved = localStorage.getItem(userKey);
-      return saved ? JSON.parse(saved) : [];
-    }
-    return [];
-  });
+  const [savedArticles, setSavedArticles] = useState([]);
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    const token = localStorage.getItem("jwt");
+    if (token) {
+      checkToken(token)
+        .then((user) => {
+          setUserData({
+            _id: user._id || user.id || "",
+            email: user.email || "",
+            name: user.name || user.username || "",
+          });
+          setIsLoggedIn(true);
+        })
+        .catch(() => {
+          setIsLoggedIn(false);
+          setUserData({ _id: "", email: "", name: "" });
+          localStorage.removeItem("jwt");
+          setErrorMessage("Session expired. Please log in again.");
+        });
+    }
+  }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("jwt");
+    if (isLoggedIn && userData._id && token) {
+      api
+        .getSavedArticles()
+        .then((articles) => {
+          const normalized = articles.map((a) => ({
+            ...a,
+            url: a.url || a.link || "",
+            urlToImage: a.imageUrl || a.urlToImage || "",
+            publishedAt: a.date || a.publishedAt || "",
+            description: a.text || a.description || "",
+            source: { name: a.source?.name || a.source || "" },
+          }));
+          setSavedArticles(normalized);
+        })
+        .catch((err) => {
+          if (err.response && err.response.status === 401) {
+            setErrorMessage("Session expired. Please log in again.");
+            setIsLoggedIn(false);
+            setUserData({ _id: "", email: "", name: "" });
+            localStorage.removeItem("jwt");
+            setSavedArticles([]);
+          } else {
+            setErrorMessage(
+              "Failed to fetch saved articles. Please try again.",
+            );
+            setSavedArticles([]);
+          }
+        });
+    } else {
       setSavedArticles([]);
     }
-  }, [isLoggedIn]);
-
-  useEffect(() => {
-    if (isLoggedIn && userData._id) {
-      const userKey = `savedArticles_${userData._id}`;
-      const saved = localStorage.getItem(userKey);
-      if (saved) {
-        const articles = JSON.parse(saved);
-
-        setSavedArticles((current) => {
-          const currentJson = JSON.stringify(current);
-          return currentJson === saved ? current : articles;
-        });
-      }
-    }
-  }, [userData._id, isLoggedIn]);
-
-  useEffect(() => {
-    if (isLoggedIn && userData._id) {
-      const userKey = `savedArticles_${userData._id}`;
-      localStorage.setItem(userKey, JSON.stringify(savedArticles));
-    }
-  }, [savedArticles, isLoggedIn, userData._id]);
+  }, [isLoggedIn, userData._id]);
 
   const handleSearch = (searchQuery) => {
     setIsLoadingArticles(true);
@@ -89,7 +110,6 @@ function App() {
         setIsLoadingArticles(false);
       })
       .catch((err) => {
-        console.log(err);
         setSearchError("Failed to fetch news articles. Please try again.");
         setIsLoadingArticles(false);
         console.error(err);
@@ -104,122 +124,131 @@ function App() {
   };
 
   const handleRegistration = ({ email, password, username }) => {
-    const existingUser = localStorage.getItem("user");
-    if (existingUser) {
-      const user = JSON.parse(existingUser);
-      if (user.email === email) {
-        return alert("User already exists with this email");
-      }
+    if (!email || !password || !username) {
+      setErrorMessage("All fields are required");
+      return;
     }
 
-    const newUser = {
-      _id: Date.now().toString(),
-      email: email,
-      password: password,
-      username: username,
-    };
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setErrorMessage("Invalid email format");
+      return;
+    }
 
-    localStorage.setItem("user", JSON.stringify(newUser));
-    setActiveModal("register-success");
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    if (!passwordRegex.test(password)) {
+      setErrorMessage(
+        "Password must be at least 6 characters long and contain both letters and numbers",
+      );
+      return;
+    }
+
+    signup({ email, password, username })
+      .then((res) => {
+        setUserData(res);
+        closeActiveModal();
+        navigate("/");
+      })
+      .catch(() => {
+        setErrorMessage("Registration failed. Please try again.");
+      });
   };
-
-  //if (password === confirmPassword) {
-  //console.log("Registration data:", { username, email, password });
-  // TODO: Implement signup API call when backend is ready
-  // signup({ name: username, email, password, avatar: "" })
-  //   .then(() => return signin({ email, password }))
-  //   .then((res) => {
-  //     localStorage.setItem("jwt", res.token);
-  //     setUserData({ ...res.user });
-  //     setIsLoggedIn(true);
-  //     closeActiveModal();
-  //     navigate("/");
-  //   })
-  //   .catch((error) => console.error("Registration failed:", error));
-
-  //else {
-  //console.error("Passwords do not match");
-  //}
 
   const handleLogin = ({ email, password }) => {
     if (!email || !password) {
-      return console.error("Email and password are required");
-    }
-
-    const storedUser = localStorage.getItem("user");
-
-    if (!storedUser) {
-      return console.error("No user found. Please register first.");
-    }
-
-    const userData = JSON.parse(storedUser);
-
-    if (userData.email === email && userData.password === password) {
-      setUserData({
-        _id: userData._id,
-        email: userData.email,
-        name: userData.username,
-      });
-      setIsLoggedIn(true);
-      closeActiveModal();
-      navigate("/");
-    } else {
-      return console.error("Invalid email or password");
-    }
-  };
-
-  //console.log("Login data:", { email, password });
-  // TODO: Implement signin API call when backend is ready
-  // signin({ email, password })
-  //   .then((res) => {
-  //     localStorage.setItem("jwt", res.token);
-  //     setUserData({ ...res.user });
-  //     setIsLoggedIn(true);
-  //     closeActiveModal();
-  //     navigate("/");
-  //   })
-  //   .catch((error) => console.error("Login failed:", error));
-
-  //closeActiveModal();
-  //};
-
-  /*const handleSignOut = () => {
-    localStorage.removeItem("jwt");
-    setIsLoggedIn(false);
-    setUserData({ _id: "", email: "", name: "" });
-    navigate("/");
-  };
-*/
-  const handleSignOut = () => {
-    setSavedArticles([]);
-    setIsLoggedIn(false);
-    setUserData({ _id: "", email: "", name: "" });
-    navigate("/");
-  };
-
-  const handleSavedArticles = (articles) => {
-    if (!isLoggedIn) {
-      setActiveModal("login");
+      setErrorMessage("Both email and password are required.");
       return;
     }
 
-    const isSaved = savedArticles.some((saved) => saved.url === articles.url);
-    if (isSaved) {
-      const updatedArticles = savedArticles.filter(
-        (saved) => saved.url !== articles.url,
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setErrorMessage("Invalid email format.");
+      return;
+    }
+
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    if (!passwordRegex.test(password)) {
+      setErrorMessage(
+        "Password must be at least 6 characters long and contain both letters and numbers.",
       );
-      setSavedArticles(updatedArticles);
       return;
     }
-    const articleWithKeyword = { ...articles, keyword: searchKeyword };
-    setSavedArticles([...savedArticles, articleWithKeyword]);
+    signin({ email, password })
+      .then((res) => {
+        localStorage.setItem("jwt", res.token);
+        return checkToken(res.token);
+      })
+      .then((user) => {
+        setUserData({
+          _id: user._id || user.id || "",
+          email: user.email || "",
+          name: user.name || user.username || "",
+        });
+        setIsLoggedIn(true);
+        closeActiveModal();
+        navigate("/");
+      })
+      .catch((err) => {
+        console.error("Login error:", err);
+        if (err.response && err.response.status === 401) {
+          setErrorMessage("Invalid credentials. Please try again.");
+        } else if (err.message && err.message.includes("profile")) {
+          setErrorMessage("Failed to fetch user profile.");
+        } else {
+          setErrorMessage(
+            "Login failed. Please check your credentials and try again.",
+          );
+        }
+      });
   };
 
-  const handleDeleteSavedArticle = (articleUrl) => {
-    const updatedArticles = savedArticles.filter(
-      (item) => item.url !== articleUrl,
-    );
-    setSavedArticles(updatedArticles);
+  const handleSignOut = () => {
+    setIsLoggedIn(false);
+    setUserData({ _id: "", email: "", name: "" });
+    localStorage.removeItem("jwt");
+    setSavedArticles([]);
+    navigate("/");
+  };
+
+  const handleSavedArticles = (article) => {
+    api
+      .saveArticle({
+        keyword: searchKeyword || "",
+        imageUrl: article.urlToImage || article.urlToimage || "",
+        url: article.url || article.link || "",
+        link: article.url || article.link || "",
+        title: article.title || "",
+        date: article.publishedAt || article.date || "",
+        text: article.description || article.text || "",
+        source:
+          (article.source && (article.source.name || article.source)) || "",
+      })
+      .then((articles) => {
+        const normalized = articles.map((a) => ({
+          ...a,
+          urlToImage: a.imageUrl,
+          publishedAt: a.date,
+          description: a.text,
+          source: { name: a.source },
+        }));
+        setSavedArticles(normalized);
+      })
+      .catch(() =>
+        setErrorMessage("Failed to save article. Please try again."),
+      );
+  };
+
+  const handleDeleteSavedArticle = (articleId) => {
+    api
+      .deleteArticle(articleId)
+      .then(() => {
+        setSavedArticles((prevSavedArticles) =>
+          prevSavedArticles.filter((item) => item._id !== articleId),
+        );
+      })
+      .catch(() => {
+        setErrorMessage("Failed to delete article. Please try again.");
+      });
   };
 
   const closeActiveModal = useCallback(() => {
@@ -325,6 +354,7 @@ function App() {
             onClose={closeActiveModal}
             handleRegistration={handleRegistration}
             switchToLogin={handleSwitchToLogin}
+            errorMessage={errorMessage}
           />
         )}
 
@@ -334,6 +364,7 @@ function App() {
             onClose={closeActiveModal}
             handleLogin={handleLogin}
             switchToRegister={handleSwitchToRegister}
+            errorMessage={errorMessage}
           />
         )}
 

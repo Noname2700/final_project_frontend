@@ -19,6 +19,22 @@ Next, we built the user authentication forms and added validation to ensure user
 - Media Queries
 - Router
 
+## Backend Repository
+The backend for the project can be found at:
+("https://github.com/Noname2700/final_project_backend")
+
+This backend provides:
+- User authentication(register,login, JWT tokens)
+- MongoDB integration
+- Express.js REST API
+- Password hashing(argon2)
+- Cors
+- Morgan and Winston(request logs and error logs)
+- Ratelimit(to limit api request)
+- Eslint(checking errors)
+- Sanitize and Validation
+
+
 ## Deployment
 ("https://noname2700.github.io/final_project_frontend/")
 
