@@ -1,4 +1,5 @@
 import axios from "axios";
+import { refreshToken } from "./auth.js";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -6,42 +7,59 @@ export function checkResponse(response) {
   return response.data;
 }
 
+
+const apiClient = axios.create({
+  baseURL: BASE_URL,
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+
+apiClient.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+   
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+       
+        await refreshToken();
+       
+        return apiClient(originalRequest);
+      } catch (refreshError) {
+     
+        window.dispatchEvent(new CustomEvent("session-expired"));
+        return Promise.reject(refreshError);
+      }
+    }
+
+    return Promise.reject(error);
+  },
+);
+
 function getSavedArticles() {
-  const token = localStorage.getItem("jwt");
-  return axios
-    .get(`${BASE_URL}/api/articles`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    })
-    .then(checkResponse);
+  return apiClient.get("/api/articles").then(checkResponse);
 }
 
 function saveArticle(article) {
   if (!article || !article.title || !article.link) {
     return Promise.reject("Invalid article data");
   }
-  const token = localStorage.getItem("jwt");
-  return axios
-    .post(
-      `${BASE_URL}/api/articles`,
-      {
-        keyword: article.keyword,
-        imageUrl: article.imageUrl,
-        title: article.title,
-        date: article.date,
-        text: article.text,
-        source: article.source,
-        link: article.link,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token ? `Bearer ${token}` : "",
-        },
-      },
-    )
+  return apiClient
+    .post("/api/articles", {
+      keyword: article.keyword,
+      imageUrl: article.imageUrl,
+      title: article.title,
+      date: article.date,
+      text: article.text,
+      source: article.source,
+      link: article.link,
+    })
     .then(checkResponse);
 }
 
@@ -49,14 +67,8 @@ function deleteArticle(articleId) {
   if (!articleId) {
     return Promise.reject("Invalid article ID for deletion");
   }
-  const token = localStorage.getItem("jwt");
-  return axios
-    .delete(`${BASE_URL}/api/articles/${articleId}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    })
+  return apiClient
+    .delete(`/api/articles/${articleId}`)
     .then(checkResponse)
     .then(() => articleId);
 }

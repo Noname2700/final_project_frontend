@@ -18,7 +18,7 @@ import MobileMenu from "../MobileMenu/MobileMenu.jsx";
 import { getNews } from "../../utils/NewsApi.js";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute.jsx";
 import api from "../../utils/api.js";
-import { signup, signin, checkToken } from "../../utils/auth.js";
+import { signup, signin, signout, getCurrentUser } from "../../utils/auth.js";
 
 function App() {
   const location = useLocation();
@@ -43,29 +43,40 @@ function App() {
   const [savedArticles, setSavedArticles] = useState([]);
 
   useEffect(() => {
-    const token = localStorage.getItem("jwt");
-    if (token) {
-      checkToken(token)
-        .then((user) => {
-          setUserData({
-            _id: user._id || user.id || "",
-            email: user.email || "",
-            name: user.name || user.username || "",
-          });
-          setIsLoggedIn(true);
-        })
-        .catch(() => {
-          setIsLoggedIn(false);
-          setUserData({ _id: "", email: "", name: "" });
-          localStorage.removeItem("jwt");
-          setErrorMessage("Session expired. Please log in again.");
+    getCurrentUser()
+      .then((user) => {
+        setUserData({
+          _id: user._id || user.id || "",
+          email: user.email || "",
+          name: user.name || user.username || "",
         });
-    }
+        setIsLoggedIn(true);
+      })
+      .catch(() => {
+        setIsLoggedIn(false);
+        setUserData({ _id: "", email: "", name: "" });
+      });
   }, []);
 
   useEffect(() => {
-    const token = localStorage.getItem("jwt");
-    if (isLoggedIn && userData._id && token) {
+    const handleSessionExpired = () => {
+      setIsLoggedIn(false);
+      setUserData({ _id: "", email: "", name: "" });
+      setSavedArticles([]);
+      setErrorMessage("Your session has expired. Please log in again.");
+      setActiveModal("login");
+      navigate("/");
+    };
+
+    window.addEventListener("session-expired", handleSessionExpired);
+
+    return () => {
+      window.removeEventListener("session-expired", handleSessionExpired);
+    };
+  }, [navigate]);
+
+  useEffect(() => {
+    if (isLoggedIn && userData._id) {
       api
         .getSavedArticles()
         .then((articles) => {
@@ -84,7 +95,6 @@ function App() {
             setErrorMessage("Session expired. Please log in again.");
             setIsLoggedIn(false);
             setUserData({ _id: "", email: "", name: "" });
-            localStorage.removeItem("jwt");
             setSavedArticles([]);
           } else {
             setErrorMessage(
@@ -175,8 +185,8 @@ function App() {
     }
     signin({ email, password })
       .then((res) => {
-        localStorage.setItem("jwt", res.token);
-        return checkToken(res.token);
+        
+        return getCurrentUser();
       })
       .then((user) => {
         setUserData({
@@ -203,11 +213,21 @@ function App() {
   };
 
   const handleSignOut = () => {
-    setIsLoggedIn(false);
-    setUserData({ _id: "", email: "", name: "" });
-    localStorage.removeItem("jwt");
-    setSavedArticles([]);
-    navigate("/");
+    signout()
+      .then(() => {
+        setIsLoggedIn(false);
+        setUserData({ _id: "", email: "", name: "" });
+        setSavedArticles([]);
+        navigate("/");
+      })
+      .catch((err) => {
+        console.error("Signout error:", err);
+      
+        setIsLoggedIn(false);
+        setUserData({ _id: "", email: "", name: "" });
+        setSavedArticles([]);
+        navigate("/");
+      });
   };
 
   const handleSavedArticles = (article) => {

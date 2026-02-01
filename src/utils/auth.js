@@ -3,7 +3,7 @@ import { checkResponse } from "./api.js";
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3002";
 
-function request(url, method, data, token) {
+function request(url, method, data) {
   return axios({
     url,
     method,
@@ -11,8 +11,8 @@ function request(url, method, data, token) {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
+    withCredentials: true,
   }).then(checkResponse);
 }
 
@@ -28,6 +28,14 @@ export const signin = ({ email, password }) => {
   return request(`${BASE_URL}/api/users/signin`, "POST", { email, password });
 };
 
-export const checkToken = (token) => {
-  return request(`${BASE_URL}/api/users/me`, "GET", undefined, token);
+export const signout = () => {
+  return request(`${BASE_URL}/api/users/signout`, "POST");
+};
+
+export const getCurrentUser = () => {
+  return request(`${BASE_URL}/api/users/me`, "GET");
+};
+
+export const refreshToken = () => {
+  return request(`${BASE_URL}/api/users/refresh`, "POST");
 };

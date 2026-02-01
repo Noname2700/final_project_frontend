@@ -33,6 +33,7 @@ This backend provides:
 - Ratelimit(to limit api request)
 - Eslint(checking errors)
 - Sanitize and Validation
+- HttpOnly Cookies
 
 
 ## Deployment
