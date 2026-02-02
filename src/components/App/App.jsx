@@ -126,10 +126,12 @@ function App() {
       });
   };
   const handleSwitchToLogin = () => {
+    setErrorMessage(""); // Clear error messages when switching modals
     setActiveModal("login");
   };
 
   const handleSwitchToRegister = () => {
+    setErrorMessage(""); // Clear error messages when switching modals
     setActiveModal("register");
   };
 
@@ -155,11 +157,19 @@ function App() {
 
     signup({ email, password, username })
       .then((res) => {
-        setUserData(res);
-        closeActiveModal();
-        navigate("/");
+        return getCurrentUser();
       })
-      .catch(() => {
+      .then((user) => {
+        setUserData({
+          _id: user._id || user.id || "",
+          email: user.email || "",
+          name: user.name || user.username || "",
+        });
+        setIsLoggedIn(true);
+        setActiveModal("register-success");
+      })
+      .catch((err) => {
+        console.error("Registration error:", err);
         setErrorMessage("Registration failed. Please try again.");
       });
   };
@@ -185,7 +195,6 @@ function App() {
     }
     signin({ email, password })
       .then((res) => {
-        
         return getCurrentUser();
       })
       .then((user) => {
@@ -195,6 +204,7 @@ function App() {
           name: user.name || user.username || "",
         });
         setIsLoggedIn(true);
+        setErrorMessage("");
         closeActiveModal();
         navigate("/");
       })
@@ -222,7 +232,7 @@ function App() {
       })
       .catch((err) => {
         console.error("Signout error:", err);
-      
+
         setIsLoggedIn(false);
         setUserData({ _id: "", email: "", name: "" });
         setSavedArticles([]);
@@ -303,8 +313,14 @@ function App() {
           className={`page__content${isHomePage ? " page__content_type_home" : ""}`}
         >
           <Header
-            onSignUpClick={() => setActiveModal("register")}
-            onSignInClick={() => setActiveModal("login")}
+            onSignUpClick={() => {
+              setErrorMessage("");
+              setActiveModal("register");
+            }}
+            onSignInClick={() => {
+              setErrorMessage("");
+              setActiveModal("login");
+            }}
             isLoggedIn={isLoggedIn}
             userData={userData}
             onSignOut={handleSignOut}
@@ -316,7 +332,10 @@ function App() {
             isLoggedIn={isLoggedIn}
             userData={userData}
             onSignOut={handleSignOut}
-            onSignInClick={() => setActiveModal("login")}
+            onSignInClick={() => {
+              setErrorMessage("");
+              setActiveModal("login");
+            }}
           />
           <Routes>
             <Route
