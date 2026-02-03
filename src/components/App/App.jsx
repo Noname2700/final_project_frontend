@@ -126,12 +126,12 @@ function App() {
       });
   };
   const handleSwitchToLogin = () => {
-    setErrorMessage(""); // Clear error messages when switching modals
+    setErrorMessage(""); 
     setActiveModal("login");
   };
 
   const handleSwitchToRegister = () => {
-    setErrorMessage(""); // Clear error messages when switching modals
+    setErrorMessage(""); 
     setActiveModal("register");
   };
 
@@ -210,8 +210,15 @@ function App() {
       })
       .catch((err) => {
         console.error("Login error:", err);
+        console.error("Error response data:", err.response?.data);
+        console.error("Error response status:", err.response?.status);
+
         if (err.response && err.response.status === 401) {
           setErrorMessage("Invalid credentials. Please try again.");
+        } else if (err.response && err.response.status === 500) {
+          setErrorMessage(
+            `Server error: ${err.response?.data?.message || "The server encountered an error. Please try again later."}`,
+          );
         } else if (err.message && err.message.includes("profile")) {
           setErrorMessage("Failed to fetch user profile.");
         } else {
