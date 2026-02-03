@@ -253,15 +253,18 @@ function App() {
         source:
           (article.source && (article.source.name || article.source)) || "",
       })
-      .then((articles) => {
-        const normalized = articles.map((a) => ({
-          ...a,
-          urlToImage: a.imageUrl,
-          publishedAt: a.date,
-          description: a.text,
-          source: { name: a.source },
-        }));
-        setSavedArticles(normalized);
+      .then((savedArticle) => {
+        const normalized = {
+          ...savedArticle,
+          urlToImage: savedArticle.imageUrl,
+          publishedAt: savedArticle.date,
+          description: savedArticle.text,
+          source: { name: savedArticle.source },
+        };
+        setSavedArticles((prevSavedArticles) => [
+          ...prevSavedArticles,
+          normalized,
+        ]);
       })
       .catch(() =>
         setErrorMessage("Failed to save article. Please try again."),
@@ -273,7 +276,12 @@ function App() {
       .deleteArticle(articleId)
       .then(() => {
         setSavedArticles((prevSavedArticles) =>
-          prevSavedArticles.filter((item) => item._id !== articleId),
+          prevSavedArticles.filter(
+            (item) =>
+              item._id !== articleId &&
+              item.url !== articleId &&
+              item.link !== articleId,
+          ),
         );
       })
       .catch(() => {
