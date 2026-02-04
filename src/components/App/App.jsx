@@ -126,12 +126,12 @@ function App() {
       });
   };
   const handleSwitchToLogin = () => {
-    setErrorMessage(""); 
+    setErrorMessage("");
     setActiveModal("login");
   };
 
   const handleSwitchToRegister = () => {
-    setErrorMessage(""); 
+    setErrorMessage("");
     setActiveModal("register");
   };
 
@@ -156,9 +156,6 @@ function App() {
     }
 
     signup({ email, password, username })
-      .then((res) => {
-        return getCurrentUser();
-      })
       .then((user) => {
         setUserData({
           _id: user._id || user.id || "",
@@ -194,9 +191,6 @@ function App() {
       return;
     }
     signin({ email, password })
-      .then((res) => {
-        return getCurrentUser();
-      })
       .then((user) => {
         setUserData({
           _id: user._id || user.id || "",
