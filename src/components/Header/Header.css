@@ -1,0 +1,237 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0 16px;
+  position: relative;
+}
+
+.header::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.header__title {
+  font-family: "Roboto Slab", serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  margin-left: 104px;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-right: 0;
+  font-family: "Roboto Slab", serif;
+  color: white;
+}
+
+.page__content:not(.page__content_type_home) .header__title {
+  color: #1a1b22;
+}
+
+.page__content:not(.page__content_type_home) .header::after {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.header__buttons {
+  display: flex;
+  gap: 42px;
+  margin-right: 104px;
+}
+.header__homebutton {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  transform: translateY(15px);
+  color: white;
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 28px;
+  display: inline-block;
+}
+
+.header__homebutton:hover {
+  opacity: 0.7;
+}
+
+.page__content:not(.page__content_type_home) .header__homebutton {
+  color: #1a1b22;
+}
+
+.header__homebutton.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  width: 68px;
+  transform: translate(-10px, 2px);
+  background-color: white;
+  border-radius: 10px;
+}
+
+.header__savedarticlesbutton {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  transform: translateY(15px);
+  color: white;
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 28px;
+  display: inline-block;
+}
+
+.header__savedarticlesbutton:hover {
+  opacity: 0.7;
+}
+
+.page__content:not(.page__content_type_home) .header__savedarticlesbutton {
+  color: #1a1b22;
+}
+
+.page__content:not(.page__content_type_home) .header__homebutton.active::after,
+.page__content:not(.page__content_type_home)
+  .header__savedarticlesbutton.active::after {
+  background-color: #1a1b22;
+}
+.header__savedarticlesbutton.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  width: 120px;
+  transform: translate(-10px, 2px);
+  background-color: white;
+  border-radius: 10px;
+}
+
+.header__signupbutton {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  border: 1px solid #ffffff;
+  cursor: pointer;
+  background-color: transparent;
+  border-radius: 100px;
+
+  color: white;
+  width: 176px;
+}
+
+.header__signupbutton:hover {
+  opacity: 0.9;
+  box-shadow: #d6d6dc 0px 4px 10px;
+}
+
+.page__content:not(.page__content_type_home) .header__signupbutton {
+  border: 1px solid #1a1b22;
+  color: #1a1b22;
+}
+
+.header__usernamebutton {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  border: 1px solid #ffffff;
+  cursor: pointer;
+  background-color: transparent;
+  border-radius: 100px;
+  color: #ffffff;
+  min-width: 176px;
+  height: 48px;
+  padding: 12px 20px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.header__usernamebutton:hover {
+  opacity: 0.9;
+  box-shadow: #d6d6dc 0px 4px 10px;
+}
+
+.header__logout-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.page__content:not(.page__content_type_home) .header__usernamebutton {
+  border: 1px solid #1a1b22;
+  color: #1a1b22;
+}
+
+.header__menu-btn {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  z-index: 10;
+}
+
+.header__menu-line {
+  width: 24px;
+  height: 2px;
+  background-color: white;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.page__content:not(.page__content_type_home) .header__menu-line {
+  background-color: #1a1b22;
+}
+
+@media screen and (max-width: 768px) {
+  .header {
+    margin: 0 auto;
+  }
+  .header__title {
+    margin-left: 40px;
+  }
+  .header__buttons {
+    margin-right: 40px;
+  }
+}
+
+@media screen and (max-width: 430px) {
+  .header__title {
+    position: relative;
+    margin-left: 16px;
+  }
+  .header__buttons {
+    display: none;
+    margin-right: 20px;
+  }
+
+  .header__menu-btn {
+    display: flex;
+    margin-right: 16px;
+  }
+}
+
+@media screen and (max-width: 380px) {
+  .header__title {
+    font-family: "Roboto Slab", serif;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 24px;
+  }
+}

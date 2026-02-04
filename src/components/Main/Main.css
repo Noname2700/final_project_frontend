@@ -1,0 +1,125 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-grow: 1;
+  width: 100%;
+  max-height: 500px;
+  padding: 40px 20px;
+  color: #ffffff;
+  animation: fadeIn 0.5s ease-out;
+}
+.main__title {
+  font-family: "Roboto Slab", serif;
+  font-weight: 400;
+  font-size: 60px;
+  line-height: 64px;
+  padding: 20px;
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+.main__subtitle {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 24px;
+  max-width: 600px;
+  margin: 16px 0 0 0;
+  padding: 0 20px;
+}
+
+.main__search {
+  position: relative;
+  width: 100%;
+  max-width: 608px;
+  margin-top: 88px;
+}
+
+.main__search-input {
+  width: 100%;
+  height: 64px;
+  border-radius: 100px;
+  border: none;
+  padding: 0 140px 0 24px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.main__search-button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 64px;
+  width: 168px;
+  padding: 0 32px;
+  border: none;
+  border-radius: 100px;
+  background-color: #2f71e5;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.main__search-button:hover {
+  background-color: #347eff;
+}
+.main__search-button:active {
+  background-color: #2a65cc;
+}
+
+@media screen and (max-width: 430px) {
+  .main {
+    padding: 32px 16px;
+    max-height: none;
+    box-sizing: border-box;
+  }
+
+  .main__title {
+    font-family: "Roboto Slab", serif;
+    font-weight: 400;
+    font-size: 36px;
+    line-height: 40px;
+    padding: 0;
+    margin: 0 0 16px 0;
+  }
+
+  .main__subtitle {
+    font-weight: 400;
+    font-family: "Roboto";
+    font-size: 18px;
+    line-height: 24px;
+    margin: 0;
+    padding: 0 16px;
+    margin: 0 0 122px 0;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .main {
+    padding: 24px 16px;
+    align-items: flex-start;
+    text-align: left;
+    box-sizing: border-box;
+  }
+
+  .main__title {
+    font-size: 36px;
+    line-height: 40px;
+    margin: 0 0 12px 0;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .main__subtitle {
+    font-size: 16px;
+    line-height: 22px;
+    padding: 0;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}

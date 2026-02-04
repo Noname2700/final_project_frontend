@@ -1,0 +1,112 @@
+@import "../Header/Header.css";
+
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
+}
+
+.mobile-menu--open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-menu__content {
+  position: relative;
+  background-color: #1a1b22;
+  padding: 60px 20px 20px;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  box-sizing: border-box;
+}
+.mobile-menu__header {
+  background-color: transparent;
+  margin-bottom: 30px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.modal__close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 25px;
+  height: 25px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  background-image: url("../../assets/images/closebutton.svg");
+}
+
+.modal__close:hover {
+  opacity: 0.6;
+}
+
+.mobile-menu__title {
+  position: absolute;
+  top: 8px;
+  width: 25px;
+  color: white;
+  display: flex;
+}
+
+.mobile-menu__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.mobile-menu__link {
+  text-decoration: none;
+  color: #f7f3f3;
+  font-size: 18px;
+  font-weight: 500;
+  padding: 10px 0;
+}
+
+.mobile-menu__link:hover {
+  color: #4694fa;
+}
+
+.mobile-menu__link.active {
+  color: #eceeef;
+  font-weight: 700;
+}
+
+.mobile-menu__signin-btn,
+.mobile-menu__username-btn {
+  width: 280px;
+  padding: 12px 20px;
+  border: 1px solid #f3f4f7;
+  background-color: transparent;
+  border-radius: 100px;
+  font-family: "Roboto", sans-serif;
+  font-size: 18px;
+  color: #f7f3f3;
+  cursor: pointer;
+  margin: 20px auto 0 auto;
+  display: block;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-menu__signin-btn:hover,
+.mobile-menu__username-btn:hover {
+  opacity: 0.7;
+  box-shadow: #d6d6dc 0px 4px 10px;
+}
+
+.mobile-menu__text {
+  color: grey;
+}
