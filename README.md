@@ -4,18 +4,20 @@ This is a React responsive news article application allows users to search for a
 
 ## Overview
 
-The NewsExplorer app will provide links in the articles upon searching for a specific topic that will provide users with more information, as well as giving them the option to sign up/sign in order for them to save the articles or delete the article they no longer want in their account . The project works as follow:
+The NewsExplorer app will provide links in the articles upon searching for a specific topic that will provide users with more information, as well as giving them the option to sign up/sign in order for them to save the articles or delete them if they no longer want in their account. The project works as follow:
 
-- Users will insert a topic in the search field upon clicking the search button/ hitting enter where they will recieve a response from the external API 
+- Users will insert a topic in the search field upon clicking the search button/ hitting enter, where they will recieve a response from the external API(Axios & External API).
 
-- 
+- User will be able to see the articles as cards and browser throught them, having access to click on the title/ image to get more information on their topics by exitting our site and going to the main source.
 
-- To build this functionality, we structured our components with the necessary data to display articles as cards. We began by creating the page layout and breaking it into sections based on the Figma design. After styling the layout, we obtained a News API key to enable article searches. We created and tested the fetch requests using Postman to ensure the API worked correctly.
+- Providing a message for users to sign up upon overing over the savebutton that allows logged in users to save card articles.
 
-- Next, we built the user authentication forms and added validation to ensure users entered proper credentials before gaining access to saving articles. Conditional rendering was used throughout the app to control access—showing or hiding the save/delete buttons, the “Saved Articles” link in the header, and other UI elements depending on whether the user was signed in.
+- Extracting users information through the sign up and sign in forms and authenticating it through the backend request and displaying option to saved articles page in the header (Navlink &Router)
+- Protecting the routes the allows signin users to navigate from the home page to the saved articles page, authorizing access to save and delete articles  to the logged in users who have an account(Navigate & UseState).
 
-- We then set up routing to make all navigation links function correctly, including two footer links that lead to external sources. After testing the routes, we focused on responsiveness. We implemented a custom on‑screen keyboard that appears when users interact with text inputs on mobile devices. To support this, we added a utility file that detects whether the device is touch‑enabled, allowing the keyboard to adapt across different platforms.
-- Finally, we matched the app’s layout to the Figma design, added the required fonts, and applied consistent styling across all components to complete the project.
+- Displaying the numbers of articles being saved in the saved articles page(UseState).
+
+- Being able to run and display the website for desktop, tablets and mobiles(Media Queries). 
 
 ## Technology
 
