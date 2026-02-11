@@ -1,41 +1,29 @@
-import axios from "axios";
-import { checkResponse } from "./api.js";
-
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3002";
-
-function request(url, method, data) {
-  return axios({
-    url,
-    method,
-    data,
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    withCredentials: true,
-  }).then(checkResponse);
-}
+import { apiClient, checkResponse } from "./api.js";
 
 export const signup = ({ email, password, username }) => {
-  return request(`${BASE_URL}/api/users/signup`, "POST", {
-    email,
-    password,
-    name: username,
-  });
+  return apiClient
+    .post("/api/users/signup", {
+      email,
+      password,
+      name: username,
+    })
+    .then(checkResponse);
 };
 
 export const signin = ({ email, password }) => {
-  return request(`${BASE_URL}/api/users/signin`, "POST", { email, password });
+  return apiClient
+    .post("/api/users/signin", { email, password })
+    .then(checkResponse);
 };
 
 export const signout = () => {
-  return request(`${BASE_URL}/api/users/signout`, "POST");
+  return apiClient.post("/api/users/signout").then(checkResponse);
 };
 
 export const getCurrentUser = () => {
-  return request(`${BASE_URL}/api/users/me`, "GET");
+  return apiClient.get("/api/users/me").then(checkResponse);
 };
 
 export const refreshToken = () => {
-  return request(`${BASE_URL}/api/users/refresh`, "POST");
+  return apiClient.post("/api/users/refresh").then(checkResponse);
 };

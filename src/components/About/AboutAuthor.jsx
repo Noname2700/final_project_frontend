@@ -8,28 +8,24 @@ function AboutAuthor() {
       <div className="about-author__content">
         <h2 className="about-author__title">About The Author</h2>
         <p className="about-author__description">
-          Hey there and welcome to my website! I'm Yohan Encarnacion, a
-          passionate full-stack developer with a knack for creating dynamic and
-          user-friendly web applications. With a strong desire to continue to
-          grow as a full-stack developer with a solid foundation in both
-          front-end and back-end technologies, I enjoy bringing ideas to life
-          through code. When I'm not coding, you can find me working at a
-          part-time job, exploring the latest tech trends, exercising at the
-          gym, reading CS books, or indulging in gaming . I'm currently familiar
-          with various programming languages like JavaScript, React, HTML5, and
-          CSS3 and frameworks like Node.js, and Express. In the past year, my
-          views have completely changed regarding technology, especially when I
-          interact with the internet understanding just how much it takes for
-          everything to work together. My awareness of how the internet
-          functions and how we interact with it has grown tremendously, and I've
-          come to appreciate the path former and current developers/engineers
-          have created clearing up obstacles for us to be able to continue to
-          grow and make things easier, smooth, and efficient for the world.
-          They've really paved the way for new developers to create fast,
-          smooth, adaptive, and efficient UIs that allows the world to operate
-          on a daily basis. I'm hoping to continue this legacy and make a
-          positive impact in the tech world, so let's connect and build
-          something amazing together!
+          Hey there — welcome to my website! Im Yohan Encarnacion, a passionate
+          full-stack developer dedicated to building dynamic, user-friendly web
+          applications. I'm driven by a genuine desire to grow as a developer
+          and strengthen my foundation across both front-end and back-end
+          technologies. I love bringing ideas to life through clean, thoughtful
+          code. When Im not coding, you'll usually find me working at my
+          part-time job, exploring new tech trends, hitting the gym, reading
+          computer science books, or enjoying some gaming. Im currently familiar
+          with JavaScript, HTML5, CSS3, and frameworks like React, Node.js, and
+          Express. Over the past year, my entire perspective on technology has
+          undergone a significant transformation. Understanding how the internet
+          works behind the scenes — and how much engineering goes into making
+          everyday interactions seamless — has given me a deep appreciation for
+          the developers and engineers who paved the way. Their work allows us
+          to build faster, smoother, and more adaptive user experiences that
+          power the world every day. Im excited to continue that legacy and make
+          a positive impact in the tech world. Let's connect and build something
+          amazing together.
         </p>
       </div>
     </div>

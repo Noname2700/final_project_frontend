@@ -1,10 +1,14 @@
-# News Article App
+# NewsExplorer App
 
-- This project is a fully responsive news article website that allows users to search for any information they want—covering current global topics as well as older articles from any country. Each article displays its publication date and source, helping users understand how recent the news is and where it came from. Users can also create an account to save articles they find interesting.
+This is a React responsive news article application allows users to search for any news information that's posted by any credible news company, keeping up with the latest and most popular news all over the world, covering a large amount of topics.
 
-## Functionality
+## Overview
 
-- When users perform a search, the results appear as a collection of article cards. Hovering over the save button prompts users to create an account. The button on the right side of the header opens modal forms for signing up and signing in. Once signed in, the header updates to show the user’s name, which also provides the option to sign out. These features work consistently across all devices, from desktop to mobile. A dedicated “Saved Articles” page becomes available only after the user signs in, allowing them to view and delete their saved articles.
+The NewsExplorer app will provide links in the articles upon searching for a specific topic that will provide users with more information, as well as giving them the option to sign up/sign in order for them to save the articles or delete the article they no longer want in their account . The project works as follow:
+
+- Users will insert a topic in the search field upon clicking the search button/ hitting enter where they will recieve a response from the external API 
+
+- 
 
 - To build this functionality, we structured our components with the necessary data to display articles as cards. We began by creating the page layout and breaking it into sections based on the Figma design. After styling the layout, we obtained a News API key to enable article searches. We created and tested the fetch requests using Postman to ensure the API worked correctly.
 
@@ -15,12 +19,13 @@
 
 ## Technology
 
-- JavaScript
-- React
+- Navlink
+- UseState
 - External API
-- Fetch API
+- Axios
 - Media Queries
 - Router
+- Navigate
 
 ## Backend Repository
 

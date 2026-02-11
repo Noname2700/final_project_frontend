@@ -1,12 +1,10 @@
 import axios from "axios";
-import { refreshToken } from "./auth.js";
 
-const BASE_URL = import.meta.env.VITE_API_URL;
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3002";
 
 export function checkResponse(response) {
   return response.data;
 }
-
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -16,23 +14,18 @@ const apiClient = axios.create({
   },
 });
 
-
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-   
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
-       
-        await refreshToken();
-       
+        await apiClient.post("/api/users/refresh");
         return apiClient(originalRequest);
       } catch (refreshError) {
-     
         window.dispatchEvent(new CustomEvent("session-expired"));
         return Promise.reject(refreshError);
       }
@@ -73,4 +66,5 @@ function deleteArticle(articleId) {
     .then(() => articleId);
 }
 
+export { apiClient };
 export default { getSavedArticles, saveArticle, deleteArticle };
