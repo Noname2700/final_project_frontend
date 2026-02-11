@@ -170,7 +170,7 @@ function App() {
       })
       .catch((err) => {
         console.error("Registration error:", err);
-        setErrorMessage("Registration failed. Please try again.");
+        setErrorMessage(err.message);
       });
   };
 
@@ -212,22 +212,7 @@ function App() {
       })
       .catch((err) => {
         console.error("Login error:", err);
-        console.error("Error response data:", err.response?.data);
-        console.error("Error response status:", err.response?.status);
-
-        if (err.response && err.response.status === 401) {
-          setErrorMessage("Invalid credentials. Please try again.");
-        } else if (err.response && err.response.status === 500) {
-          setErrorMessage(
-            `Server error: ${err.response?.data?.message || "The server encountered an error. Please try again later."}`,
-          );
-        } else if (err.message && err.message.includes("profile")) {
-          setErrorMessage("Failed to fetch user profile.");
-        } else {
-          setErrorMessage(
-            "Login failed. Please check your credentials and try again.",
-          );
-        }
+        setErrorMessage(err.message);
       });
   };
 
@@ -241,7 +226,7 @@ function App() {
       })
       .catch((err) => {
         console.error("Signout error:", err);
-
+        setErrorMessage(err.message);
         setIsLoggedIn(false);
         setUserData({ _id: "", email: "", name: "" });
         setSavedArticles([]);
@@ -275,9 +260,10 @@ function App() {
           normalized,
         ]);
       })
-      .catch(() =>
-        setErrorMessage("Failed to save article. Please try again."),
-      );
+      .catch((err) => {
+        console.error("Failed to save article. Please try again.", err);
+        setErrorMessage(err.message);
+      });
   };
 
   const handleDeleteSavedArticle = (articleId) => {
@@ -293,8 +279,9 @@ function App() {
           ),
         );
       })
-      .catch(() => {
-        setErrorMessage("Failed to delete article. Please try again.");
+      .catch((err) => {
+        console.error("Failed to delete article. Please try again.", err);
+        setErrorMessage(err.message);
       });
   };
 
