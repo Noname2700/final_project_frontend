@@ -1,57 +1,85 @@
-import axios from "axios";
-import { refreshToken } from "./auth.js";
+import {
 
-const BASE_URL = import.meta.env.VITE_API_URL;
+  ERROR_MESSAGES,
+  LOCAL_STORAGE_KEYS,
+} from "./constants.js";
 
-export function checkResponse(response) {
-  return response.data;
+export function checkResponse(res) {
+  if (res.ok) {
+    return res.json();
+  }
+  return Promise.reject(`Error: ${res.status}`);
 }
 
+function fetchWithAuth(url, options) {
+  const token = localStorage.getItem(LOCAL_STORAGE_KEYS.JWT);
 
-const apiClient = axios.create({
-  baseURL: BASE_URL,
-  withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-
-apiClient.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-
-   
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      try {
-       
-        await refreshToken();
-       
-        return apiClient(originalRequest);
-      } catch (refreshError) {
-     
-        window.dispatchEvent(new CustomEvent("session-expired"));
-        return Promise.reject(refreshError);
+  return fetch(url, {
+    ...options,
+    headers: {
+      ...options.headers,
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        return fetch(`/api/users/refresh`, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        })
+          .then((refreshResponse) => {
+            if (refreshResponse.ok) {
+              return refreshResponse.json().then((data) => {
+                if (data.token) {
+                  localStorage.setItem(LOCAL_STORAGE_KEYS.JWT, data.token);
+                  return fetch(url, {
+                    ...options,
+                    headers: {
+                      ...options.headers,
+                      Accept: "application/json",
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${data.token}`,
+                    },
+                  });
+                } else {
+                  localStorage.removeItem(LOCAL_STORAGE_KEYS.JWT);
+                  window.dispatchEvent(new CustomEvent("session-expired"));
+                  throw new Error(ERROR_MESSAGES.SESSION_EXPIRED);
+                }
+              });
+            }
+            throw new Error(ERROR_MESSAGES.TOKEN_REFRESH_FAILED);
+          })
+          .catch((error) => {
+            localStorage.removeItem(LOCAL_STORAGE_KEYS.JWT);
+            window.dispatchEvent(new CustomEvent("session-expired"));
+            throw error;
+          });
       }
-    }
-
-    return Promise.reject(error);
-  },
-);
+      return response;
+    })
+    .then(checkResponse);
+}
 
 function getSavedArticles() {
-  return apiClient.get("/api/articles").then(checkResponse);
+  return fetchWithAuth(`/api/articles`, {
+    method: "GET",
+  });
 }
 
 function saveArticle(article) {
   if (!article || !article.title || !article.link) {
-    return Promise.reject("Invalid article data");
+    return Promise.reject(ERROR_MESSAGES.INVALID_ARTICLE_DATA);
   }
-  return apiClient
-    .post("/api/articles", {
+  return fetchWithAuth(`/api/articles`, {
+    method: "POST",
+    body: JSON.stringify({
       keyword: article.keyword,
       imageUrl: article.imageUrl,
       title: article.title,
@@ -59,18 +87,18 @@ function saveArticle(article) {
       text: article.text,
       source: article.source,
       link: article.link,
-    })
-    .then(checkResponse);
+    }),
+  });
 }
 
 function deleteArticle(articleId) {
   if (!articleId) {
-    return Promise.reject("Invalid article ID for deletion");
+    return Promise.reject(ERROR_MESSAGES.INVALID_ARTICLE_ID);
   }
-  return apiClient
-    .delete(`/api/articles/${articleId}`)
-    .then(checkResponse)
-    .then(() => articleId);
+
+  return fetchWithAuth(`/api/articles/${articleId}`, {
+    method: "DELETE",
+  }).then(() => articleId);
 }
 
-export default { getSavedArticles, saveArticle, deleteArticle };
+export default { getSavedArticles, saveArticle, deleteArticle, fetchWithAuth };

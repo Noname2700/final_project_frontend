@@ -17,8 +17,11 @@ function NewsCard({
   const [imageError, setImageError] = useState(false);
 
   const handleDeleteArticle = () => {
+    const articleIdToDelete = article._id || article.url || article.link;
+    console.log("🗑️ NewsCard delete clicked for article:", article);
+    console.log("🔍 Using ID for deletion:", articleIdToDelete);
     if (onDeleteArticle) {
-      onDeleteArticle(article._id || article.url || article.link);
+      onDeleteArticle(articleIdToDelete);
     }
   };
 

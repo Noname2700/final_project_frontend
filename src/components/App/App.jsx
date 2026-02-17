@@ -1,4 +1,4 @@
-import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { Switch, Route, useHistory, useLocation } from "react-router-dom";
 import { useState, useEffect, useCallback } from "react";
 import Header from "../Header/Header.jsx";
 import Main from "../Main/Main.jsx";
@@ -19,11 +19,18 @@ import { getNews } from "../../utils/NewsApi.js";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute.jsx";
 import api from "../../utils/api.js";
 import { signup, signin, signout, getCurrentUser } from "../../utils/auth.js";
+import CurrentUserContext from "../../contexts/CurrentUserContext.jsx";
+import {
+  ROUTES,
+  ERROR_MESSAGES,
+  EMAIL_REGEX,
+  PASSWORD_REGEX,
+} from "../../utils/constants.js";
 
 function App() {
   const location = useLocation();
   const isHomePage = location.pathname === "/";
-  const navigate = useNavigate();
+  const history = useHistory();
   const [activeModal, setActiveModal] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -63,9 +70,9 @@ function App() {
       setIsLoggedIn(false);
       setUserData({ _id: "", email: "", name: "" });
       setSavedArticles([]);
-      setErrorMessage("Your session has expired. Please log in again.");
+      setErrorMessage(ERROR_MESSAGES.SESSION_EXPIRED);
       setActiveModal("login");
-      navigate("/");
+      history.push(ROUTES.HOME);
     };
 
     window.addEventListener("session-expired", handleSessionExpired);
@@ -73,7 +80,7 @@ function App() {
     return () => {
       window.removeEventListener("session-expired", handleSessionExpired);
     };
-  }, [navigate]);
+  }, [history]);
 
   useEffect(() => {
     if (isLoggedIn && userData._id) {
@@ -92,14 +99,12 @@ function App() {
         })
         .catch((err) => {
           if (err.response && err.response.status === 401) {
-            setErrorMessage("Session expired. Please log in again.");
+            setErrorMessage(ERROR_MESSAGES.SESSION_EXPIRED);
             setIsLoggedIn(false);
             setUserData({ _id: "", email: "", name: "" });
             setSavedArticles([]);
           } else {
-            setErrorMessage(
-              "Failed to fetch saved articles. Please try again.",
-            );
+            setErrorMessage(ERROR_MESSAGES.FETCH_ARTICLES_FAILED);
             setSavedArticles([]);
           }
         });
@@ -120,11 +125,16 @@ function App() {
         setIsLoadingArticles(false);
       })
       .catch((err) => {
-        setSearchError("Failed to fetch news articles. Please try again.");
+        setSearchError(ERROR_MESSAGES.FETCH_NEWS_FAILED);
         setIsLoadingArticles(false);
         console.error(err);
       });
   };
+
+  const handleUnauthorized = () => {
+    setActiveModal("login");
+  };
+
   const handleSwitchToLogin = () => {
     setErrorMessage("");
     setActiveModal("login");
@@ -137,21 +147,17 @@ function App() {
 
   const handleRegistration = ({ email, password, username }) => {
     if (!email || !password || !username) {
-      setErrorMessage("All fields are required");
+      setErrorMessage(ERROR_MESSAGES.ALL_FIELDS_REQUIRED);
       return;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setErrorMessage("Invalid email format");
+    if (!EMAIL_REGEX.test(email)) {
+      setErrorMessage(ERROR_MESSAGES.INVALID_EMAIL);
       return;
     }
 
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
-    if (!passwordRegex.test(password)) {
-      setErrorMessage(
-        "Password must be at least 6 characters long and contain both letters and numbers",
-      );
+    if (!PASSWORD_REGEX.test(password)) {
+      setErrorMessage(ERROR_MESSAGES.INVALID_PASSWORD);
       return;
     }
 
@@ -170,36 +176,30 @@ function App() {
       })
       .catch((err) => {
         console.error("Registration error:", err);
-        setErrorMessage("Registration failed. Please try again.");
+        setErrorMessage(ERROR_MESSAGES.REGISTRATION_FAILED);
       });
   };
 
   const handleLogin = ({ email, password }) => {
     if (!email || !password) {
-      setErrorMessage("Both email and password are required.");
+      setErrorMessage(ERROR_MESSAGES.EMAIL_AND_PASSWORD_REQUIRED);
       return;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setErrorMessage("Invalid email format.");
+    if (!EMAIL_REGEX.test(email)) {
+      setErrorMessage(ERROR_MESSAGES.INVALID_EMAIL);
       return;
     }
 
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
-    if (!passwordRegex.test(password)) {
-      setErrorMessage(
-        "Password must be at least 6 characters long and contain both letters and numbers.",
-      );
+    if (!PASSWORD_REGEX.test(password)) {
+      setErrorMessage(ERROR_MESSAGES.INVALID_PASSWORD);
       return;
     }
     signin({ email, password })
       .then((res) => {
-        
         return getCurrentUser();
       })
       .then((user) => {
-       
         setUserData({
           _id: user._id || user.id || "",
           email: user.email || "",
@@ -208,7 +208,7 @@ function App() {
         setIsLoggedIn(true);
         setErrorMessage("");
         closeActiveModal();
-        navigate("/");
+        history.push(ROUTES.HOME);
       })
       .catch((err) => {
         console.error("Login error:", err);
@@ -216,17 +216,15 @@ function App() {
         console.error("Error response status:", err.response?.status);
 
         if (err.response && err.response.status === 401) {
-          setErrorMessage("Invalid credentials. Please try again.");
+          setErrorMessage(ERROR_MESSAGES.INVALID_CREDENTIALS);
         } else if (err.response && err.response.status === 500) {
           setErrorMessage(
-            `Server error: ${err.response?.data?.message || "The server encountered an error. Please try again later."}`,
+            `Server error: ${err.response?.data?.message || ERROR_MESSAGES.SERVER_ERROR}`,
           );
         } else if (err.message && err.message.includes("profile")) {
-          setErrorMessage("Failed to fetch user profile.");
+          setErrorMessage(ERROR_MESSAGES.FETCH_PROFILE_FAILED);
         } else {
-          setErrorMessage(
-            "Login failed. Please check your credentials and try again.",
-          );
+          setErrorMessage(ERROR_MESSAGES.LOGIN_FAILED);
         }
       });
   };
@@ -237,7 +235,7 @@ function App() {
         setIsLoggedIn(false);
         setUserData({ _id: "", email: "", name: "" });
         setSavedArticles([]);
-        navigate("/");
+        history.push(ROUTES.HOME);
       })
       .catch((err) => {
         console.error("Signout error:", err);
@@ -245,7 +243,7 @@ function App() {
         setIsLoggedIn(false);
         setUserData({ _id: "", email: "", name: "" });
         setSavedArticles([]);
-        navigate("/");
+        history.push(ROUTES.HOME);
       });
   };
 
@@ -275,26 +273,59 @@ function App() {
           normalized,
         ]);
       })
-      .catch(() =>
-        setErrorMessage("Failed to save article. Please try again."),
-      );
+      .catch(() => setErrorMessage(ERROR_MESSAGES.SAVE_ARTICLE_FAILED));
   };
 
   const handleDeleteSavedArticle = (articleId) => {
+    console.log("🗑️ Deleting article with ID:", articleId);
+    console.log("📝 Current saved articles:", savedArticles);
+
+  
+    setSavedArticles((prevSavedArticles) => {
+      const filtered = prevSavedArticles.filter((item) => {
+        const itemId = String(item._id || item.id || "");
+        const targetId = String(articleId);
+        const urlMatch = item.url === articleId || item.link === articleId;
+
+        console.log("🔍 Comparing:", {
+          itemId,
+          targetId,
+          urlMatch,
+          item: { _id: item._id, id: item.id, url: item.url, link: item.link },
+        });
+
+        
+        const shouldRemove = itemId === targetId || urlMatch;
+        return !shouldRemove;
+      });
+      console.log("📋 Articles after filter:", filtered.length, "remaining");
+      return filtered;
+    });
+
     api
       .deleteArticle(articleId)
       .then(() => {
-        setSavedArticles((prevSavedArticles) =>
-          prevSavedArticles.filter(
-            (item) =>
-              item._id !== articleId &&
-              item.url !== articleId &&
-              item.link !== articleId,
-          ),
-        );
+        console.log("✅ Delete API successful");
       })
-      .catch(() => {
-        setErrorMessage("Failed to delete article. Please try again.");
+      .catch((err) => {
+        console.error("❌ Delete API failed:", err);
+
+        api
+          .getSavedArticles()
+          .then((articles) => {
+            const normalized = articles.map((a) => ({
+              ...a,
+              url: a.url || a.link || "",
+              urlToImage: a.imageUrl || a.urlToImage || "",
+              publishedAt: a.date || a.publishedAt || "",
+              description: a.text || a.description || "",
+              source: { name: a.source?.name || a.source || "" },
+            }));
+            setSavedArticles(normalized);
+          })
+          .catch(() => {
+            setErrorMessage(ERROR_MESSAGES.DELETE_ARTICLE_FAILED);
+          });
       });
   };
 
@@ -321,118 +352,122 @@ function App() {
   }, [activeModal, handleEscape]);
 
   return (
-    <KeyboardProvider>
-      <KeyboardListener />
-      <Keyboard />
+    <CurrentUserContext.Provider value={userData}>
+      <KeyboardProvider>
+        <KeyboardListener />
+        <Keyboard />
 
-      <div className="page">
-        <div
-          className={`page__content${isHomePage ? " page__content_type_home" : ""}`}
-        >
-          <Header
-            onSignUpClick={() => {
-              setErrorMessage("");
-              setActiveModal("register");
-            }}
-            onSignInClick={() => {
-              setErrorMessage("");
-              setActiveModal("login");
-            }}
-            isLoggedIn={isLoggedIn}
-            userData={userData}
-            onSignOut={handleSignOut}
-            onMenuClick={() => setIsMenuOpen(true)}
-          />
-          <MobileMenu
-            isOpen={isMenuOpen}
-            handleCloseClick={() => setIsMenuOpen(false)}
-            isLoggedIn={isLoggedIn}
-            userData={userData}
-            onSignOut={handleSignOut}
-            onSignInClick={() => {
-              setErrorMessage("");
-              setActiveModal("login");
-            }}
-          />
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <Main
-                  SearchForm={SearchForm}
-                  onSearch={handleSearch}
-                  articles={articles}
-                  isLoadingArticles={isLoadingArticles}
-                  searchError={searchError}
-                  searchKeyword={searchKeyword}
-                />
-              }
-            />
-            <Route
-              path="/saved-articles"
-              element={
-                <ProtectedRoute isLoggedIn={isLoggedIn}>
-                  <SavedArticles
-                    userData={userData}
-                    savedArticlesCount={savedArticles.length}
-                    savedArticles={savedArticles}
-                    keywords={[]}
-                    onDeleteArticle={handleDeleteSavedArticle}
-                    isLoggedIn={isLoggedIn}
-                    setActiveModal={setActiveModal}
-                  />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </div>
-        <main>
-          {isHomePage && (
-            <ArticlesSection
-              articles={articles}
-              isLoadingArticles={isLoadingArticles}
-              searchError={searchError}
-              searchKeyword={searchKeyword}
-              onSaveArticle={handleSavedArticles}
-              savedArticles={savedArticles}
-              searchExecuted={searchExecuted}
+        <div className="page">
+          <div
+            className={`page__content${isHomePage ? " page__content_type_home" : ""}`}
+          >
+            <Header
+              onSignUpClick={() => {
+                setErrorMessage("");
+                setActiveModal("register");
+              }}
+              onSignInClick={() => {
+                setErrorMessage("");
+                setActiveModal("login");
+              }}
               isLoggedIn={isLoggedIn}
+              onSignOut={handleSignOut}
+              onMenuClick={() => setIsMenuOpen(true)}
+            />
+            <MobileMenu
+              isOpen={isMenuOpen}
+              handleCloseClick={() => setIsMenuOpen(false)}
+              isLoggedIn={isLoggedIn}
+              onSignOut={handleSignOut}
+              onSignInClick={() => {
+                setErrorMessage("");
+                setActiveModal("login");
+              }}
+            />
+            <Switch>
+              <Route
+                exact
+                path="/"
+                render={() => (
+                  <Main
+                    SearchForm={SearchForm}
+                    onSearch={handleSearch}
+                    articles={articles}
+                    isLoadingArticles={isLoadingArticles}
+                    searchError={searchError}
+                    searchKeyword={searchKeyword}
+                  />
+                )}
+              />
+              <Route
+                exact
+                path="/saved-articles"
+                render={() => (
+                  <ProtectedRoute
+                    isLoggedIn={isLoggedIn}
+                    handleUnauthorized={handleUnauthorized}
+                  >
+                    <SavedArticles
+                      savedArticlesCount={savedArticles.length}
+                      savedArticles={savedArticles}
+                      keywords={[]}
+                      onDeleteArticle={handleDeleteSavedArticle}
+                      isLoggedIn={isLoggedIn}
+                      setActiveModal={setActiveModal}
+                    />
+                  </ProtectedRoute>
+                )}
+              />
+            </Switch>
+          </div>
+          <main>
+            {isHomePage && (
+              <ArticlesSection
+                articles={articles}
+                isLoadingArticles={isLoadingArticles}
+                searchError={searchError}
+                searchKeyword={searchKeyword}
+                onSaveArticle={handleSavedArticles}
+                savedArticles={savedArticles}
+                searchExecuted={searchExecuted}
+                isLoggedIn={isLoggedIn}
+                setActiveModal={setActiveModal}
+              />
+            )}
+            {isHomePage && <AboutAuthor />}
+          </main>
+          <Footer />
+
+          {activeModal === "register" && (
+            <Register
+              isOpen={true}
+              onClose={closeActiveModal}
+              handleRegistration={handleRegistration}
+              switchToLogin={handleSwitchToLogin}
+              errorMessage={errorMessage}
+            />
+          )}
+
+          {activeModal === "login" && (
+            <Login
+              isOpen={true}
+              onClose={closeActiveModal}
+              handleLogin={handleLogin}
+              switchToRegister={handleSwitchToRegister}
+              errorMessage={errorMessage}
+            />
+          )}
+
+          {activeModal === "register-success" && (
+            <RegisterSuccessfulModal
+              isOpen={true}
+              onClose={closeActiveModal}
               setActiveModal={setActiveModal}
             />
           )}
-          {isHomePage && <AboutAuthor />}
-        </main>
-        <Footer />
-
-        {activeModal === "register" && (
-          <Register
-            isOpen={true}
-            onClose={closeActiveModal}
-            handleRegistration={handleRegistration}
-            switchToLogin={handleSwitchToLogin}
-            errorMessage={errorMessage}
-          />
-        )}
-
-        {activeModal === "login" && (
-          <Login
-            isOpen={true}
-            onClose={closeActiveModal}
-            handleLogin={handleLogin}
-            switchToRegister={handleSwitchToRegister}
-            errorMessage={errorMessage}
-          />
-        )}
-
-        {activeModal === "register-success" && (
-          <RegisterSuccessfulModal
-            isOpen={true}
-            onClose={closeActiveModal}
-            setActiveModal={setActiveModal}
-          />
-        )}
-      </div>
-    </KeyboardProvider>
+        </div>
+      </KeyboardProvider>
+    </CurrentUserContext.Provider>
   );
 }
 

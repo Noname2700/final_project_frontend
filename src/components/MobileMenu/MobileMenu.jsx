@@ -1,30 +1,31 @@
-import React from "react";
+import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { useModalClose } from "../../hooks/useModalClose.js";
+import CurrentUserContext from "../../contexts/CurrentUserContext.jsx";
 import "./MobileMenu.css";
 
 function MobileMenu({
   isOpen,
   handleCloseClick,
   isLoggedIn,
-  userData,
-  // onSignOut,
+  onSignOut,
   onSignInClick,
 }) {
+  const currentUser = useContext(CurrentUserContext);
+
   const handleSignInClick = () => {
     if (onSignInClick) {
       onSignInClick();
     }
   };
 
-  //new feature for future: sign out on mobile menu
-  /*const handleSignOut = () => {
-    onClose();
+  const handleSignOut = () => {
+    handleCloseClick();
     if (onSignOut) {
       onSignOut();
     }
   };
-  */
+
   useModalClose(isOpen, handleCloseClick);
 
   return (
@@ -40,6 +41,7 @@ function MobileMenu({
         </div>
         <nav className="mobile-menu__nav">
           <NavLink
+            exact
             to="/"
             className="mobile-menu__link"
             onClick={handleCloseClick}
@@ -49,6 +51,7 @@ function MobileMenu({
 
           {isLoggedIn && (
             <NavLink
+              exact
               to="/saved-articles"
               className="mobile-menu__link"
               onClick={handleCloseClick}
@@ -58,11 +61,12 @@ function MobileMenu({
           )}
 
           {isLoggedIn ? (
-            <NavLink to="/saved-articles">
-              <button className="mobile-menu__username-btn">
-                {userData.name}
-              </button>
-            </NavLink>
+            <button
+              className="mobile-menu__username-btn"
+              onClick={handleSignOut}
+            >
+              {currentUser.name || currentUser.username || currentUser.email}
+            </button>
           ) : (
             <button
               className="mobile-menu__signin-btn"
