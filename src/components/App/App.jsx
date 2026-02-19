@@ -32,6 +32,7 @@ function App() {
   const history = useHistory();
   const [activeModal, setActiveModal] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAuthChecking, setIsAuthChecking] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const [searchExecuted, setSearchExecuted] = useState(false);
@@ -61,6 +62,9 @@ function App() {
       .catch(() => {
         setIsLoggedIn(false);
         setUserData({ _id: "", email: "", name: "" });
+      })
+      .finally(() => {
+        setIsAuthChecking(false);
       });
   }, []);
 
@@ -71,6 +75,7 @@ function App() {
       setSavedArticles([]);
       setErrorMessage(ERROR_MESSAGES.SESSION_EXPIRED);
       setActiveModal("login");
+      setIsAuthChecking(false);
       history.push(ROUTES.HOME);
     };
 
@@ -313,7 +318,7 @@ function App() {
       })
       .catch((err) => {
         console.error("❌ Delete API failed:", err);
-        // Revert the optimistic update
+
         setSavedArticles(originalSavedArticles);
         setErrorMessage(ERROR_MESSAGES.DELETE_ARTICLE_FAILED);
       });
@@ -397,6 +402,7 @@ function App() {
                 render={() => (
                   <ProtectedRoute
                     isLoggedIn={isLoggedIn}
+                    isAuthChecking={isAuthChecking}
                     handleUnauthorized={handleUnauthorized}
                   >
                     <SavedArticles
