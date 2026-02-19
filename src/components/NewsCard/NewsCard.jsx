@@ -31,7 +31,7 @@ function NewsCard({
     } else if (isLoggedIn) {
       onSaveArticle(article);
     } else {
-      setActiveModal("login");
+      setActiveModal("register");
     }
   };
 

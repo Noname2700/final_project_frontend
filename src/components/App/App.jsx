@@ -29,7 +29,6 @@ import {
 
 function App() {
   const location = useLocation();
-  const isHomePage = location.pathname === "/";
   const history = useHistory();
   const [activeModal, setActiveModal] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -248,6 +247,11 @@ function App() {
   };
 
   const handleSavedArticles = (article) => {
+    if (!isLoggedIn) {
+      setActiveModal("register");
+      return;
+    }
+
     api
       .saveArticle({
         keyword: searchKeyword || "",
@@ -280,7 +284,8 @@ function App() {
     console.log("🗑️ Deleting article with ID:", articleId);
     console.log("📝 Current saved articles:", savedArticles);
 
-  
+    const originalSavedArticles = savedArticles;
+
     setSavedArticles((prevSavedArticles) => {
       const filtered = prevSavedArticles.filter((item) => {
         const itemId = String(item._id || item.id || "");
@@ -294,7 +299,6 @@ function App() {
           item: { _id: item._id, id: item.id, url: item.url, link: item.link },
         });
 
-        
         const shouldRemove = itemId === targetId || urlMatch;
         return !shouldRemove;
       });
@@ -309,23 +313,9 @@ function App() {
       })
       .catch((err) => {
         console.error("❌ Delete API failed:", err);
-
-        api
-          .getSavedArticles()
-          .then((articles) => {
-            const normalized = articles.map((a) => ({
-              ...a,
-              url: a.url || a.link || "",
-              urlToImage: a.imageUrl || a.urlToImage || "",
-              publishedAt: a.date || a.publishedAt || "",
-              description: a.text || a.description || "",
-              source: { name: a.source?.name || a.source || "" },
-            }));
-            setSavedArticles(normalized);
-          })
-          .catch(() => {
-            setErrorMessage(ERROR_MESSAGES.DELETE_ARTICLE_FAILED);
-          });
+        // Revert the optimistic update
+        setSavedArticles(originalSavedArticles);
+        setErrorMessage(ERROR_MESSAGES.DELETE_ARTICLE_FAILED);
       });
   };
 
@@ -359,7 +349,9 @@ function App() {
 
         <div className="page">
           <div
-            className={`page__content${isHomePage ? " page__content_type_home" : ""}`}
+            className={`page__content${
+              location.pathname === "/" ? " page__content_type_home" : ""
+            }`}
           >
             <Header
               onSignUpClick={() => {
@@ -420,22 +412,20 @@ function App() {
               />
             </Switch>
           </div>
-          <main>
-            {isHomePage && (
-              <ArticlesSection
-                articles={articles}
-                isLoadingArticles={isLoadingArticles}
-                searchError={searchError}
-                searchKeyword={searchKeyword}
-                onSaveArticle={handleSavedArticles}
-                savedArticles={savedArticles}
-                searchExecuted={searchExecuted}
-                isLoggedIn={isLoggedIn}
-                setActiveModal={setActiveModal}
-              />
-            )}
-            {isHomePage && <AboutAuthor />}
-          </main>
+          {location.pathname === "/" && (
+            <ArticlesSection
+              articles={articles}
+              isLoadingArticles={isLoadingArticles}
+              searchError={searchError}
+              searchKeyword={searchKeyword}
+              onSaveArticle={handleSavedArticles}
+              savedArticles={savedArticles}
+              searchExecuted={searchExecuted}
+              isLoggedIn={isLoggedIn}
+              setActiveModal={setActiveModal}
+            />
+          )}
+          {location.pathname === "/" && <AboutAuthor />}
           <Footer />
 
           {activeModal === "register" && (

@@ -5,6 +5,15 @@ export const BASE_API_URL = import.meta.env.VITE_API_URL || "";
 export const NEWS_API_KEY = import.meta.env.VITE_NEWS_API_KEY || "";
 export const NEWS_API_BASE_URL = "https://newsapi.org/v2/everything";
 
+// Check for required environment variables
+if (!BASE_API_URL) {
+  console.warn("Warning: VITE_API_URL environment variable is not set. API calls may fail.");
+}
+
+if (!NEWS_API_KEY) {
+  console.warn("Warning: VITE_NEWS_API_KEY environment variable is not set. News search will not work.");
+}
+
 // Pagination
 export const ARTICLES_PER_PAGE = 3;
 

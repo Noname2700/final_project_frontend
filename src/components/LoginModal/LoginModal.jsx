@@ -12,7 +12,7 @@ const LoginModal = ({
   switchToRegister,
   errorMessage,
 }) => {
-  const { values, handleChange, resetForm, isValid } = useForm({
+  const { values, handleChange, resetForm, isValid, errors } = useForm({
     email: "",
     password: "",
   });
@@ -54,11 +54,7 @@ const LoginModal = ({
           inputMode="none"
         />
         <span className="modal__error">
-          {errorMessage
-            ? errorMessage
-            : values.email && isValid === false
-              ? "Please enter a valid email"
-              : ""}
+          {errorMessage && !errors.email ? errorMessage : errors.email}
         </span>
       </label>
 
@@ -76,11 +72,7 @@ const LoginModal = ({
           inputMode="none"
         />
         <span className="modal__error">
-          {errorMessage
-            ? errorMessage
-            : values.password && isValid === false
-              ? "Password is required"
-              : ""}
+          {errorMessage && !errors.password ? errorMessage : errors.password}
         </span>
       </label>
 
