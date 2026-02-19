@@ -11,7 +11,7 @@ const RegisterModal = ({
   switchToLogin,
   errorMessage,
 }) => {
-  const { values, handleChange, resetForm, isValid } = useForm({
+  const { values, handleChange, resetForm, isValid, errors } = useForm({
     username: "",
     email: "",
     password: "",
@@ -62,11 +62,7 @@ const RegisterModal = ({
           inputMode="none"
         />
         <span className="modal__error">
-          {errorMessage
-            ? errorMessage
-            : values.email && isValid === false
-              ? "Please enter a valid email"
-              : ""}
+          {errorMessage && !errors.email ? errorMessage : errors.email}
         </span>
       </label>
 
@@ -86,11 +82,7 @@ const RegisterModal = ({
           inputMode="none"
         />
         <span className="modal__error">
-          {errorMessage
-            ? errorMessage
-            : values.password && isValid === false
-              ? "Password must be at least 6 characters"
-              : ""}
+          {errorMessage && !errors.password ? errorMessage : errors.password}
         </span>
       </label>
 
@@ -111,11 +103,7 @@ const RegisterModal = ({
           inputMode="none"
         />
         <span className="modal__error">
-          {errorMessage
-            ? errorMessage
-            : values.username && isValid === false
-              ? "Username must be 2-40 characters"
-              : ""}
+          {errorMessage && !errors.username ? errorMessage : errors.username}
         </span>
       </label>
 

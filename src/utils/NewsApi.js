@@ -1,13 +1,19 @@
-import axios from "axios";
-import { checkResponse } from "./api";
+import { NEWS_API_KEY, NEWS_API_BASE_URL } from "./constants.js";
 
-const NEWS_API_KEY = import.meta.env.VITE_NEWS_API_KEY;
-
+function checkResponse(res) {
+  if (res.ok) {
+    return res.json();
+  }
+  return Promise.reject(`Error: ${res.status}`);
+}
 export const SORT_OPTIONS = {
   LATEST: "publishedAt",
   RELEVANCY: "relevancy",
   POPULARITY: "popularity",
 };
+
+const PAGE_SIZE = 100;
+const DAYS_TO_SEARCH = 7;
 
 export const getNews = ({
   query = "news",
@@ -18,7 +24,7 @@ export const getNews = ({
 }) => {
   const today = new Date();
   const sevenDaysAgo = new Date();
-  sevenDaysAgo.setDate(today.getDate() - 7);
+  sevenDaysAgo.setDate(today.getDate() - DAYS_TO_SEARCH);
 
   const toDate = to || today.toISOString().split("T")[0];
   const fromDate = from || sevenDaysAgo.toISOString().split("T")[0];
@@ -28,19 +34,17 @@ export const getNews = ({
     language: language,
     sortBy: sortBy,
     apiKey: NEWS_API_KEY,
-    pageSize: 100,
+    pageSize: PAGE_SIZE,
     from: fromDate,
     to: toDate,
   });
 
-  
   const newsApiBaseUrl = import.meta.env.PROD
     ? "https://nomoreparties.co/news/v2/everything"
-    : "https://newsapi.org/v2/everything";
+    : NEWS_API_BASE_URL;
 
-  return axios
-    .get(`${newsApiBaseUrl}?${params.toString()}`)
-    .then((res) => checkResponse(res))
+  return fetch(`${newsApiBaseUrl}?${params.toString()}`)
+    .then(checkResponse)
     .catch((error) => {
       console.log("Error fetching news:", error);
       throw error;

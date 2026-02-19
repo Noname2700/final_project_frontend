@@ -116,7 +116,7 @@
   border-radius: 10px;
 }
 
-.header__signupbutton {
+.header__signinbutton {
   font-family: "Roboto", sans-serif;
   font-weight: 500;
   font-size: 18px;
@@ -130,12 +130,12 @@
   width: 176px;
 }
 
-.header__signupbutton:hover {
+.header__signinbutton:hover {
   opacity: 0.9;
   box-shadow: #d6d6dc 0px 4px 10px;
 }
 
-.page__content:not(.page__content_type_home) .header__signupbutton {
+.page__content:not(.page__content_type_home) .header__signinbutton {
   border: 1px solid #1a1b22;
   color: #1a1b22;
 }

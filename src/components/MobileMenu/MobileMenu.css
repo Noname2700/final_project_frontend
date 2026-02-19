@@ -69,6 +69,7 @@
 }
 
 .mobile-menu__link {
+  font-family: "Roboto", sans-serif;
   text-decoration: none;
   color: #f7f3f3;
   font-size: 18px;

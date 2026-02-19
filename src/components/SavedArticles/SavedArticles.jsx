@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import "./SavedArticles.css";
 import NewsCards from "../NewsCards/NewsCards";
+import CurrentUserContext from "../../contexts/CurrentUserContext.jsx";
 
 function SavedArticles({
-  userData,
   savedArticlesCount = [],
   savedArticles = [],
   keywords = [],
@@ -11,6 +11,7 @@ function SavedArticles({
   isLoggedIn,
   setActiveModal,
 }) {
+  const currentUser = useContext(CurrentUserContext);
   const [showAllKeywords, setShowAllKeywords] = useState(false);
 
   const articleKeywords =
@@ -31,7 +32,7 @@ function SavedArticles({
     <div className="saved-articles__page">
       <h4 className="saved-articles__title">Saved articles</h4>
       <h2 className="saved-articles__subtitle">{`${
-        userData?.name || "User"
+        currentUser?.name || "User"
       }, you have ${savedArticlesCount} saved article${
         savedArticlesCount !== 1 ? "s" : ""
       }`}</h2>
